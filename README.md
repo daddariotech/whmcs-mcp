@@ -1,0 +1,275 @@
+# WHMCS MCP Server
+
+**The first production-grade AI integration for WHMCS.** Connect ChatGPT, Claude, and Cursor directly to your WHMCS installation — manage clients, invoices, tickets, and services through natural language.
+
+```
+You: "Send a payment reminder to all clients with overdue invoices over $50"
+AI:  Fetching overdue invoices... Found 12. Sending reminder emails... Done.
+```
+
+[![License](https://img.shields.io/badge/license-Commercial-blue)](https://daddar.io)
+[![Docker](https://img.shields.io/docker/v/daddariotech/whmcs-mcp?label=docker)](https://hub.docker.com/r/daddariotech/whmcs-mcp)
+[![MCP](https://img.shields.io/badge/MCP-compatible-green)](https://modelcontextprotocol.io)
+
+---
+
+## Quick Start — running in under 5 minutes
+
+```bash
+curl -fsSL https://daddar.io/install-whmcs-mcp.sh | bash
+```
+
+Or manually:
+
+```bash
+# Download the marketplace compose file
+curl -O https://raw.githubusercontent.com/daddariotech/dts/main/whmcs-mcp/docker-compose.marketplace.yml
+
+# Run the interactive installer
+bash <(curl -fsSL https://raw.githubusercontent.com/daddariotech/dts/main/whmcs-mcp/setup.sh)
+```
+
+The installer prompts for your WHMCS credentials and license key, writes `.env`, and starts the stack. No server configuration required.
+
+---
+
+## Get a License
+
+Purchase a license at **[daddar.io](https://daddar.io)** — billing runs through our WHMCS. After checkout, your license key appears in the client portal. Paste it into `setup.sh` when prompted.
+
+**Pricing:**
+
+| Tier | Price | Limit |
+|------|-------|-------|
+| Starter | $19/mo | 1 WHMCS install, 1 AI client |
+| Pro | $49/mo | 1 install, unlimited clients + webhook push |
+| Agency | $99/mo | 5 installs, white-label config |
+| Lifetime | $299 one-time | 1 install, all future updates |
+
+No license? A **14-day free trial** starts automatically on first run.
+
+---
+
+## What You Can Do
+
+### 30+ WHMCS Tools
+
+| Category | Tools |
+|---|---|
+| **Clients** | Get client, list clients, search, create client |
+| **Invoices** | Get invoice, list invoices, create invoice, record payment |
+| **Services** | List services, get service, upgrade/downgrade |
+| **Tickets** | Open ticket, reply to ticket, list tickets, close ticket |
+| **Quotes** | Create quote, list quotes, accept quote |
+| **Contacts** | List contacts, get contact, create contact |
+| **Addons** | List addons, get addon, update addon |
+| **Credits** | Get credit balance, add credit |
+| **Overdue** | List overdue invoices, send reminders |
+| **Reports** | Revenue reports, activity logs |
+
+All tools support `dryRun` mode — preview what would happen before making changes.
+
+### vs MX Modules MCP Server
+
+| Feature | WHMCS MCP (us) | MX Modules |
+|---|---|---|
+| Tools | 30+ | ~20 |
+| Authentication | OAuth 2.0 PKCE + bearer tokens | Static tokens only |
+| Real-time push | Webhook → AI notification | Pull only |
+| Audit log | Full trail per request | None |
+| Prometheus metrics | Built-in | None |
+| One-click install | Yes (`setup.sh`) | Manual |
+| Trial period | 14 days | None |
+| Docker support | First-class | Limited |
+
+---
+
+## Supported AI Clients
+
+| Client | Transport | Auth |
+|---|---|---|
+| **ChatGPT** (via GPT Actions) | HTTP | Bearer token or OAuth 2.0 |
+| **Claude Desktop** | HTTP | Bearer token or OAuth 2.0 |
+| **Cursor IDE** | stdio or HTTP | Bearer token or OAuth 2.0 |
+| **Any MCP-compatible client** | HTTP | Bearer token or OAuth 2.0 |
+
+---
+
+## Security
+
+- **OAuth 2.0 PKCE** — industry-standard authorization with short-lived tokens and refresh
+- **Bearer token mode** — simple API key setup for single-tenant deployments
+- **Rate limiting** — per-IP and per-token controls (configurable)
+- **Audit log** — every authenticated request logged with client ID, method, and timestamp
+- **Helmet.js** — security headers (CSP, HSTS, X-Frame-Options, etc.)
+- **Input sanitization** — defense-in-depth against injection
+- **HTTPS enforcement** — rejects plain HTTP in production
+- **Docker secrets** — credentials read from `/run/secrets/` if present
+
+---
+
+## Configuration
+
+### Environment Variables
+
+Copy `.env.example` to `.env` and fill in your values.
+
+**Required:**
+
+| Variable | Description |
+|---|---|
+| `WHMCS_API_URL` | Your WHMCS URL, e.g. `https://billing.example.com` |
+| `WHMCS_IDENTIFIER` | WHMCS API identifier |
+| `WHMCS_SECRET` | WHMCS API secret |
+
+**License:**
+
+| Variable | Description | Default |
+|---|---|---|
+| `LICENSE_KEY` | Your license key from daddar.io | (14-day trial if blank) |
+| `LICENSE_SERVER_URL` | License verification endpoint | `https://daddar.io/whmcs-mcp/license-verify.php` |
+| `LICENSE_TRIAL_DAYS` | Trial period length | `14` |
+
+**Authentication:**
+
+| Variable | Description | Default |
+|---|---|---|
+| `MCP_AUTH_MODE` | `simple` (bearer tokens) or `oauth` | `simple` |
+| `MCP_REQUIRE_AUTH` | Enforce authentication | `true` |
+
+**Webhooks (optional — Pro/Agency tiers):**
+
+| Variable | Description |
+|---|---|
+| `WHMCS_WEBHOOK_SECRET` | HMAC secret shared with your WHMCS PHP hook |
+
+See [.env.example](.env.example) for all options.
+
+---
+
+## Connecting AI Clients
+
+### Cursor IDE
+
+**Bearer token (simple):** Add to `~/.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "whmcs": {
+      "url": "https://your-server:3100/mcp",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN"
+      }
+    }
+  }
+}
+```
+
+**OAuth (New App UI):** When adding via Cursor's "New App" with OAuth, the server must have `MCP_CLIENT_REGISTRATION_SECRET` set (in Portainer or `.env`). Generate with `openssl rand -hex 24`, set it on the server, then enter the same value in Cursor's Advanced OAuth settings under "Client registration secret" (or equivalent). This enables Dynamic Client Registration so Cursor can self-register.
+
+Or for local stdio mode:
+
+```json
+{
+  "mcpServers": {
+    "whmcs": {
+      "command": "node",
+      "args": ["/path/to/whmcs-mcp/dist/index.js"],
+      "env": {
+        "WHMCS_API_URL": "https://your-whmcs.example.com",
+        "WHMCS_IDENTIFIER": "your-identifier",
+        "WHMCS_SECRET": "your-secret"
+      }
+    }
+  }
+}
+```
+
+### Claude Desktop
+
+Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows):
+
+```json
+{
+  "mcpServers": {
+    "whmcs": {
+      "url": "https://your-server:3100/mcp",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN"
+      }
+    }
+  }
+}
+```
+
+### ChatGPT (GPT Actions)
+
+Point your GPT Action schema at `https://your-server:3100/mcp`. Use OAuth 2.0 mode for multi-user setups.
+
+---
+
+## Real-Time Webhook Push (Pro/Agency)
+
+Receive WHMCS events pushed to your AI in real time — new tickets, invoices, overdue payments.
+
+See [docs/WEBHOOKS.md](docs/WEBHOOKS.md) for setup instructions.
+
+---
+
+## Deployment
+
+### Docker Compose (recommended)
+
+```bash
+docker compose -f docker-compose.marketplace.yml up -d
+```
+
+Generates tokens:
+
+```bash
+docker exec -it whmcs-mcp node dist/scripts/auth-cli.js generate \
+  --name "My AI" --scopes "mcp:read,mcp:write"
+```
+
+### Kubernetes
+
+See [k8s-deployment.yaml](k8s-deployment.yaml) and [DEPLOYMENT.md](DEPLOYMENT.md).
+
+### Behind a Reverse Proxy (nginx / Caddy / Traefik)
+
+Remove the `ports` block from `docker-compose.marketplace.yml` and proxy to `whmcs-mcp:3100`. See comments in that file.
+
+---
+
+## Observability
+
+- **Health check:** `GET /health`
+- **Readiness:** `GET /ready`
+- **Prometheus metrics:** port 9090 (configurable via `MCP_METRICS_PORT`)
+
+Key metrics: `whmcs_mcp_requests_total`, `whmcs_mcp_request_duration_seconds`, `whmcs_mcp_active_sessions`, `whmcs_mcp_auth_total`
+
+---
+
+## Development
+
+```bash
+npm install
+cp .env.example .env   # fill in credentials
+npm run dev            # tsx watch mode
+npm run build          # compile TypeScript
+npm test               # run test suite
+npm run lint           # ESLint
+```
+
+---
+
+## Support & Licensing
+
+- **Purchase / manage license:** [daddar.io](https://daddar.io)
+- **Documentation:** this repo + [DEPLOYMENT.md](DEPLOYMENT.md) + [docs/WEBHOOKS.md](docs/WEBHOOKS.md)
+- **Support:** [support@daddariotech.com](mailto:support@daddariotech.com)
+- **Security issues:** [SECURITY.md](SECURITY.md)
+
+Copyright © 2025 Daddario Tech Solutions. All rights reserved. See [LICENSE](LICENSE).

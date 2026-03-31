@@ -1,0 +1,80 @@
+# WHMCS MCP Server — Marketplace / Self-hosted Compose File
+#
+# Usage:
+#   docker compose -f docker-compose.marketplace.yml up -d
+#
+# Before starting, copy .env.example to .env and fill in your credentials,
+# or run the interactive installer: bash setup.sh
+
+services:
+  whmcs-mcp:
+    image: daddariotech/whmcs-mcp:latest
+    container_name: whmcs-mcp
+    restart: unless-stopped
+
+    # ── Port mapping ──────────────────────────────────────────────────────────
+    # If you are NOT behind a reverse proxy (nginx, Caddy, Traefik), keep this
+    # section as-is. The server will be reachable on http://your-server:3100.
+    #
+    # If you ARE behind a reverse proxy, remove the `ports` block entirely and
+    # proxy traffic to the `whmcs-mcp` service on port 3100 internally.
+    # Example nginx upstream:  proxy_pass http://whmcs-mcp:3100;
+    ports:
+      - "3100:3100"
+
+    volumes:
+      # Persistent data: tokens, OAuth clients, audit log, license cache, trial state
+      - whmcs-mcp-data:/app/data
+
+    env_file:
+      - .env
+
+    environment:
+      NODE_ENV: production
+      MCP_TRANSPORT: http
+      MCP_HTTP_PORT: "3100"
+      MCP_HTTP_HOST: "0.0.0.0"
+
+      # Auth mode: "simple" (bearer tokens) or "oauth" (full OAuth 2.0 PKCE)
+      MCP_AUTH_MODE: "${MCP_AUTH_MODE:-simple}"
+      MCP_REQUIRE_AUTH: "true"
+
+      # License (leave blank for 14-day trial)
+      LICENSE_KEY: "${LICENSE_KEY:-}"
+      LICENSE_SERVER_URL: "${LICENSE_SERVER_URL:-https://daddar.io/whmcs-mcp/license-verify.php}"
+      LICENSE_TRIAL_DAYS: "${LICENSE_TRIAL_DAYS:-14}"
+
+      # Security
+      MCP_ENFORCE_HTTPS: "${MCP_ENFORCE_HTTPS:-false}"   # set true when behind TLS proxy
+      MCP_TRUST_PROXY: "${MCP_TRUST_PROXY:-true}"
+      MCP_ALLOWED_ORIGINS: "${MCP_ALLOWED_ORIGINS:-*}"
+
+      # Rate limiting
+      MCP_RATE_LIMIT_ENABLED: "true"
+      MCP_RATE_LIMIT_PER_IP: "120"
+      MCP_RATE_LIMIT_PER_TOKEN: "300"
+
+      # Observability
+      MCP_METRICS_ENABLED: "true"
+      MCP_METRICS_PORT: "9090"
+      MCP_AUDIT_LOG_ENABLED: "true"
+      MCP_LOG_LEVEL: "info"
+
+      # Webhooks (optional — Pro/Agency tiers)
+      WHMCS_WEBHOOK_SECRET: "${WHMCS_WEBHOOK_SECRET:-}"
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3100/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+    # ── Metrics port (optional — only needed if you scrape Prometheus) ────────
+    # Uncomment to expose the metrics endpoint on the host:
+    # ports:
+    #   - "9090:9090"
+
+volumes:
+  whmcs-mcp-data:
+    driver: local
