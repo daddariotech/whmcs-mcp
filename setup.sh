@@ -68,7 +68,7 @@ read -r WHMCS_ACCESS_KEY
 
 echo ""
 echo -e "${BOLD}License${RESET}"
-echo "  Purchase at daddar.io. Leave blank to start a 14-day free trial."
+echo "  Purchase at https://daddar.io/store/ai-tools/whmcs-mcp. Leave blank to start a 14-day free trial."
 echo ""
 
 ask "License Key (or press Enter for trial):"
@@ -226,5 +226,5 @@ echo '      }'
 echo '    }'
 echo '  }'
 echo ""
-echo -e "  Manage license at: ${BOLD}https://daddar.io${RESET}"
+echo -e "  Manage license at: ${BOLD}https://daddar.io/clientarea/${RESET}"
 echo ""

@@ -35,7 +35,7 @@ The installer prompts for your WHMCS credentials and license key, writes `.env`,
 
 ## Get a License
 
-Purchase a license at **[daddar.io](https://daddar.io)** — billing runs through our WHMCS. After checkout, your license key appears in the client portal. Paste it into `setup.sh` when prompted.
+Purchase a license at **[daddar.io/store/ai-tools/whmcs-mcp](https://daddar.io/store/ai-tools/whmcs-mcp)** — after checkout, your license key appears in the client portal. Paste it into `setup.sh` when prompted.
 
 **Pricing:**
 
@@ -265,7 +265,7 @@ npm run lint           # ESLint
 
 ## Support & Licensing
 
-- **Purchase / manage license:** [daddar.io](https://daddar.io)
+- **Purchase / manage license:** [daddar.io/store/ai-tools/whmcs-mcp](https://daddar.io/store/ai-tools/whmcs-mcp)
 - **Documentation:** this repo + [DEPLOYMENT.md](DEPLOYMENT.md) + [docs/WEBHOOKS.md](docs/WEBHOOKS.md)
 - **Support:** [support@daddariotech.com](mailto:support@daddariotech.com)
 - **Security issues:** [SECURITY.md](SECURITY.md)
