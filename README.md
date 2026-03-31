@@ -13,6 +13,31 @@ AI:  Fetching overdue invoices... Found 12. Sending reminder emails... Done.
 
 ---
 
+## Prerequisites — WHMCS API Setup
+
+Before running the installer you need a WHMCS API credential with the right permissions.
+
+**1. Create an API Role**
+
+In WHMCS Admin: **Setup → Staff Management → API Roles → Add Role**
+
+- Name: `MCP Server`
+- Permissions: enable the API calls you want the MCP server to use (or enable all for full access)
+
+**2. Create an API Credential**
+
+**Setup → Staff Management → API Credentials → Generate New Credential**
+
+- Role: `MCP Server`
+- Allowed IPs: enter the IP address of the server running the MCP server (leave blank to allow any IP — not recommended for production)
+- Copy the **Identifier** and **Secret** — you'll need these during install
+
+**3. (Optional) Get your Access Key**
+
+If your WHMCS has an Access Key set (**Setup → General Settings → Security → Access Key**), you may need to provide it too.
+
+---
+
 ## Quick Start — running in under 5 minutes
 
 **Binary (no Docker required):**
