@@ -128,8 +128,6 @@ Copy `.env.example` to `.env` and fill in your values.
 |---|---|---|
 | `LICENSE_KEY` | Your license key from daddar.io | (14-day trial if blank) |
 | `LICENSE_SERVER_URL` | License verification endpoint | `https://daddar.io/whmcs-mcp/license-verify.php` |
-| `LICENSE_TRIAL_DAYS` | Trial period length | `14` |
-
 **Authentication:**
 
 | Variable | Description | Default |

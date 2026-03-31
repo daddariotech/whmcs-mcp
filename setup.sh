@@ -125,7 +125,6 @@ WHMCS_ACCESS_KEY=${WHMCS_ACCESS_KEY}
 # License (blank = 14-day trial)
 LICENSE_KEY=${LICENSE_KEY}
 LICENSE_SERVER_URL=https://daddar.io/whmcs-mcp/license-verify.php
-LICENSE_TRIAL_DAYS=14
 
 # MCP Server
 MCP_TRANSPORT=http
