@@ -4,7 +4,7 @@
 #
 # Usage:
 #   bash setup.sh
-#   curl -fsSL https://daddar.io/install-whmcs-mcp.sh | bash
+#   curl -fsSL https://daddar.io/whmcs-mcp/install.sh | bash
 
 set -euo pipefail
 

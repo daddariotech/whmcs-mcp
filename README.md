@@ -16,7 +16,7 @@ AI:  Fetching overdue invoices... Found 12. Sending reminder emails... Done.
 ## Quick Start — running in under 5 minutes
 
 ```bash
-curl -fsSL https://daddar.io/install-whmcs-mcp.sh | bash
+curl -fsSL https://daddar.io/whmcs-mcp/install.sh | bash
 ```
 
 Or manually:
