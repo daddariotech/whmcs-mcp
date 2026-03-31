@@ -21,14 +21,22 @@ Before running the installer you need a WHMCS API credential with the right perm
 
 In WHMCS Admin: **Setup → Staff Management → API Roles → Add Role**
 
-- Name: `MCP Server`
-- Permissions: enable the API calls you want the MCP server to use (or enable all for full access)
+Choose a permission preset based on how much you trust the AI:
+
+**Minimum permissions (read-only — AI can look but not touch):**
+`GetClients` `GetClientsDetails` `GetClientsProducts` `GetClientsDomains` `GetClientsAddons` `GetClientGroups` `GetContacts` `GetEmails` `GetInvoice` `GetInvoices` `GetOrders` `GetOrderStatuses` `GetProducts` `GetTicket` `GetTickets` `GetSupportDepartments` `GetQuotes` `GetCredits` `GetTransactions` `GetStats` `GetActivityLog` `GetCancelledPackages` `GetEmailTemplates` `GetCurrencies` `GetPaymentMethods` `GetHealthStatus`
+
+**Maximum permissions (full access — AI can take any action):**
+Everything above, plus:
+`AddClient` `UpdateClient` `AddClientNote` `AddContact` `UpdateContact` `CreateInvoice` `AddInvoicePayment` `AddOrder` `AcceptOrder` `CancelOrder` `OpenTicket` `AddTicketReply` `UpdateTicket` `CreateQuote` `UpdateQuote` `SendQuote` `AcceptQuote` `DeleteQuote` `AddCredit` `ApplyCredit` `AddBillableItem` `SendEmail` `UpdateClientProduct` `ModuleSuspend` `ModuleUnsuspend` `ModuleTerminate` `ModuleCreate` `UpgradeProduct`
+
+> **Tip:** Start with minimum permissions and add write permissions only as needed. This limits blast radius if an AI client goes rogue or gets a bad prompt.
 
 **2. Create an API Credential**
 
 **Setup → Staff Management → API Credentials → Generate New Credential**
 
-- Role: `MCP Server`
+- Role: select the role you just created
 - Allowed IPs: enter the IP address of the server running the MCP server (leave blank to allow any IP — not recommended for production)
 - Copy the **Identifier** and **Secret** — you'll need these during install
 
