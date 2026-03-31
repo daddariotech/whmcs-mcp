@@ -71,6 +71,16 @@ echo ""
 ask "License Key (or press Enter for trial):"
 read -r LICENSE_KEY
 
+# Generate a stable install fingerprint that survives reinstalls (stored alongside config).
+# Reuse an existing INSTALL_ID if the env file is already present so reinstalls don't
+# reset the server-side trial clock.
+if [[ -f "$ENV_FILE" ]]; then
+    INSTALL_ID="$(grep -E '^INSTALL_ID=' "$ENV_FILE" | cut -d= -f2- | tr -d '[:space:]')"
+fi
+if [[ -z "${INSTALL_ID:-}" ]]; then
+    INSTALL_ID="$(cat /proc/sys/kernel/random/uuid 2>/dev/null || uuidgen)"
+fi
+
 echo ""
 echo -e "${BOLD}Network Setup${RESET}"
 echo ""
@@ -85,6 +95,7 @@ WHMCS_API_URL=${WHMCS_API_URL}
 WHMCS_IDENTIFIER=${WHMCS_IDENTIFIER}
 WHMCS_SECRET=${WHMCS_SECRET}
 LICENSE_KEY=${LICENSE_KEY}
+INSTALL_ID=${INSTALL_ID}
 MCP_TRANSPORT=http
 MCP_HTTP_PORT=3100
 MCP_HTTP_HOST=0.0.0.0

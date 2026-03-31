@@ -41,6 +41,10 @@ services:
 
       # License (leave blank for 14-day trial)
       LICENSE_KEY: "${LICENSE_KEY:-}"
+      # Stable UUID that identifies this installation server-side.
+      # Generate once and keep it in your .env: cat /proc/sys/kernel/random/uuid
+      # NEVER change or delete this value — it anchors your server-side trial period.
+      INSTALL_ID: "${INSTALL_ID:-}"
       # Security
       MCP_ENFORCE_HTTPS: "${MCP_ENFORCE_HTTPS:-false}"   # set true when behind TLS proxy
       MCP_TRUST_PROXY: "${MCP_TRUST_PROXY:-true}"

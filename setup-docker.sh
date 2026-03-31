@@ -74,6 +74,14 @@ echo ""
 ask "License Key (or press Enter for trial):"
 read -r LICENSE_KEY
 
+# Stable install fingerprint for server-side trial tracking (reuse on reinstall).
+if [[ -f "$ENV_FILE" ]]; then
+  INSTALL_ID="$(grep -E '^INSTALL_ID=' "$ENV_FILE" | cut -d= -f2- | tr -d '[:space:]')"
+fi
+if [[ -z "${INSTALL_ID:-}" ]]; then
+  INSTALL_ID="$(cat /proc/sys/kernel/random/uuid 2>/dev/null || uuidgen)"
+fi
+
 # ── Reverse proxy detection ───────────────────────────────────────────────────
 echo ""
 echo -e "${BOLD}Network Setup${RESET}"
@@ -124,6 +132,8 @@ WHMCS_ACCESS_KEY=${WHMCS_ACCESS_KEY}
 
 # License (blank = 14-day trial)
 LICENSE_KEY=${LICENSE_KEY}
+INSTALL_ID=${INSTALL_ID}
+
 # MCP Server
 MCP_TRANSPORT=http
 MCP_HTTP_PORT=3100

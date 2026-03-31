@@ -70,15 +70,6 @@ Prompts for credentials, writes `.env`, and starts the stack via Docker Compose.
 
 Purchase a license at **[daddar.io/store/ai-tools/whmcs-mcp](https://daddar.io/store/ai-tools/whmcs-mcp)** — after checkout, your license key appears in the client portal. Paste it into `setup.sh` when prompted.
 
-**Pricing:**
-
-| Tier | Price | Limit |
-|------|-------|-------|
-| Starter | $19/mo | 1 WHMCS install, 1 AI client |
-| Pro | $49/mo | 1 install, unlimited clients + webhook push |
-| Agency | $99/mo | 5 installs, white-label config |
-| Lifetime | $299 one-time | 1 install, all future updates |
-
 No license? A **14-day free trial** starts automatically on first run.
 
 ---
@@ -105,18 +96,22 @@ No license? A **14-day free trial** starts automatically on first run.
 
 All tools support `dryRun` mode — preview what would happen before making changes.
 
-### vs MX Modules MCP Server
+### vs other WHMCS MCP servers
 
-| Feature | WHMCS MCP (us) | MX Modules |
-|---|---|---|
-| Tools | 56 | ~20 |
-| Authentication | OAuth 2.0 PKCE + bearer tokens | Static tokens only |
-| Real-time push | Webhook → AI notification | Pull only |
-| Audit log | Full trail per request | None |
-| Prometheus metrics | Built-in | None |
-| One-click install | Yes (`setup.sh`) | Manual |
-| Trial period | 14 days | None |
-| Docker support | First-class | Limited |
+| Feature | WHMCS MCP Server (us) | scarecr0w12/whmcs-mcp-tool | MX Modules |
+|---|---|---|---|
+| Tools | 56 | ~50 | ~20 |
+| HTTP transport (ChatGPT, Claude remote) | Yes | **No — stdio only** | Yes |
+| Authentication | OAuth 2.0 PKCE + bearer tokens | **None** | Static tokens only |
+| One-click install | Yes (`curl \| bash`) | Manual (clone + npm) | Manual |
+| Real-time webhook push | Yes | No | No |
+| Audit log | Yes | No | No |
+| Prometheus metrics | Yes | No | No |
+| Rate limiting | Yes | No | No |
+| `dryRun` mode on every tool | Yes | No | No |
+| Trial period | 14 days free | Free forever (MIT) | None |
+| Commercial support | Yes | None | Limited |
+| License | Commercial | MIT | Commercial |
 
 ---
 
@@ -171,7 +166,7 @@ Copy `.env.example` to `.env` and fill in your values.
 | `MCP_AUTH_MODE` | `simple` (bearer tokens) or `oauth` | `simple` |
 | `MCP_REQUIRE_AUTH` | Enforce authentication | `true` |
 
-**Webhooks (optional — Pro/Agency tiers):**
+**Webhooks (optional):**
 
 | Variable | Description |
 |---|---|
@@ -243,7 +238,7 @@ Point your GPT Action schema at `https://your-server:3100/mcp`. Use OAuth 2.0 mo
 
 ---
 
-## Real-Time Webhook Push (Pro/Agency)
+## Real-Time Webhook Push
 
 Receive WHMCS events pushed to your AI in real time — new tickets, invoices, overdue payments.
 
