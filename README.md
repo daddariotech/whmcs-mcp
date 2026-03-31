@@ -15,21 +15,21 @@ AI:  Fetching overdue invoices... Found 12. Sending reminder emails... Done.
 
 ## Quick Start — running in under 5 minutes
 
-```bash
-curl -fsSL https://daddar.io/whmcs-mcp/install.sh | bash
-```
-
-Or manually:
+**Binary (no Docker required):**
 
 ```bash
-# Download the marketplace compose file
-curl -O https://raw.githubusercontent.com/daddariotech/dts/main/whmcs-mcp/docker-compose.marketplace.yml
-
-# Run the interactive installer
-bash <(curl -fsSL https://raw.githubusercontent.com/daddariotech/dts/main/whmcs-mcp/setup.sh)
+curl -fsSL https://daddar.io/whmcs-mcp/install.sh | sudo bash
 ```
 
-The installer prompts for your WHMCS credentials and license key, writes `.env`, and starts the stack. No server configuration required.
+Prompts for your WHMCS credentials and license key, installs the binary to `/usr/local/bin`, and registers a systemd service.
+
+**Docker (recommended for servers already running Docker):**
+
+```bash
+curl -fsSL https://daddar.io/whmcs-mcp/install-docker.sh | bash
+```
+
+Prompts for credentials, writes `.env`, and starts the stack via Docker Compose.
 
 ---
 
@@ -250,24 +250,11 @@ Key metrics: `whmcs_mcp_requests_total`, `whmcs_mcp_request_duration_seconds`, `
 
 ---
 
-## Development
-
-```bash
-npm install
-cp .env.example .env   # fill in credentials
-npm run dev            # tsx watch mode
-npm run build          # compile TypeScript
-npm test               # run test suite
-npm run lint           # ESLint
-```
-
----
-
 ## Support & Licensing
 
 - **Purchase / manage license:** [daddar.io/store/ai-tools/whmcs-mcp](https://daddar.io/store/ai-tools/whmcs-mcp)
 - **Documentation:** this repo + [DEPLOYMENT.md](DEPLOYMENT.md) + [docs/WEBHOOKS.md](docs/WEBHOOKS.md)
-- **Support:** [support@daddariotech.com](mailto:support@daddariotech.com)
+- **Support:** [support@daddar.io](mailto:support@daddar.io)
 - **Security issues:** [SECURITY.md](SECURITY.md)
 
-Copyright © 2025 Daddario Tech Solutions. All rights reserved. See [LICENSE](LICENSE).
+Copyright © 2026 Daddario Tech Solutions. All rights reserved. See [LICENSE](LICENSE).
