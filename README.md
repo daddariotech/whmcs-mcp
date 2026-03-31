@@ -52,20 +52,23 @@ No license? A **14-day free trial** starts automatically on first run.
 
 ## What You Can Do
 
-### 30+ WHMCS Tools
+### 56 WHMCS Tools
 
 | Category | Tools |
 |---|---|
-| **Clients** | Get client, list clients, search, create client |
-| **Invoices** | Get invoice, list invoices, create invoice, record payment |
-| **Services** | List services, get service, upgrade/downgrade |
-| **Tickets** | Open ticket, reply to ticket, list tickets, close ticket |
-| **Quotes** | Create quote, list quotes, accept quote |
-| **Contacts** | List contacts, get contact, create contact |
-| **Addons** | List addons, get addon, update addon |
-| **Credits** | Get credit balance, add credit |
-| **Overdue** | List overdue invoices, send reminders |
-| **Reports** | Revenue reports, activity logs |
+| **Clients** | `get_client` `list_clients` `add_client` `update_client` `get_client_details` `get_client_groups` `get_client_emails` `get_client_domains` `get_client_addons` `add_client_note` |
+| **Invoices** | `get_invoice` `list_invoices` `create_invoice` `add_invoice_payment` `get_overdue_invoices` `get_transactions` |
+| **Orders** | `add_order` `get_orders` `accept_order` `cancel_order` `get_order_statuses` |
+| **Services** | `list_services` `update_service` `upgrade_product` `module_create` `module_suspend` `module_unsuspend` `module_terminate` `get_cancelled_packages` |
+| **Tickets** | `get_ticket` `list_tickets` `open_ticket` `add_ticket_reply` `update_ticket` `get_support_departments` |
+| **Quotes** | `get_quotes` `create_quote` `send_quote` `accept_quote` `update_quote` `delete_quote` |
+| **Contacts** | `get_contacts` `add_contact` `update_contact` |
+| **Credits** | `get_credits` `add_credit` `apply_credit` |
+| **Billing** | `add_billable_item` `get_payment_methods` `get_currencies` |
+| **Email** | `send_email` `get_email_templates` |
+| **Products** | `get_products` |
+| **Reports** | `get_stats` `get_activity_log` `get_transactions` |
+| **System** | `get_health_status` |
 
 All tools support `dryRun` mode — preview what would happen before making changes.
 
@@ -73,7 +76,7 @@ All tools support `dryRun` mode — preview what would happen before making chan
 
 | Feature | WHMCS MCP (us) | MX Modules |
 |---|---|---|
-| Tools | 30+ | ~20 |
+| Tools | 56 | ~20 |
 | Authentication | OAuth 2.0 PKCE + bearer tokens | Static tokens only |
 | Real-time push | Webhook → AI notification | Pull only |
 | Audit log | Full trail per request | None |
