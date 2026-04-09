@@ -32,17 +32,27 @@ Everything above, plus:
 
 > **Tip:** Start with minimum permissions and add write permissions only as needed. This limits blast radius if an AI client goes rogue or gets a bad prompt.
 
-**2. Create an API Credential**
+**2. Set an API Access Key (recommended)**
+
+An Access Key bypasses IP restrictions entirely — the recommended approach since the MCP server's outbound IP can change (Docker restarts, server moves, etc.).
+
+Add this line to your `configuration.php` in the WHMCS root:
+
+```php
+$api_access_key = 'your-secret-passphrase';
+```
+
+> Allowed characters: letters, numbers, and `! @ # $ % . ( ) * [ ] - _`
+
+Then set `WHMCS_ACCESS_KEY` to the same value in your `.env` or Portainer stack.
+
+**3. Create an API Credential**
 
 **Setup → Staff Management → API Credentials → Generate New Credential**
 
 - Role: select the role you just created
-- Allowed IPs: enter the IP address of the server running the MCP server (leave blank to allow any IP — not recommended for production)
+- Allowed IPs: leave blank if using an Access Key (recommended), or enter the server IP if you prefer IP-based restrictions
 - Copy the **Identifier** and **Secret** — you'll need these during install
-
-**3. (Optional) Get your Access Key**
-
-If your WHMCS has an Access Key set (**Setup → General Settings → Security → Access Key**), you may need to provide it too.
 
 ---
 
