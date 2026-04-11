@@ -1,13 +1,10 @@
 # WHMCS MCP Server — Marketplace / Self-hosted Compose File
 #
 # Usage:
-#   docker compose up -d
 #   docker compose -f docker-compose.marketplace.yml up -d
 #
 # Before starting, copy .env.example to .env and fill in your credentials,
 # or run the interactive installer: bash setup-docker.sh
-#
-# (docker-compose.marketplace.yml is identical — kept for docs/installer URLs.)
 
 services:
   whmcs-mcp:

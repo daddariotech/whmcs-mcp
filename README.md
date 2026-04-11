@@ -246,6 +246,36 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS)
 
 Point your GPT Action schema at `https://your-server:3100/mcp`. Use OAuth 2.0 mode for multi-user setups.
 
+### OAuth troubleshooting (Claude / Cursor remote connectors)
+
+**Discovery document.** MCP clients fetch authorization-server metadata from:
+
+`GET https://<your-host>/.well-known/oauth-authorization-server`
+
+The JSON fields `authorization_endpoint`, `token_endpoint`, and `registration_endpoint` must be URLs your server actually serves (same scheme and host as the public MCP URL unless you intentionally use a separate issuer). If those paths return **404** or **Cannot GET**, the advertised paths and the Express (or proxy) routes are out of sync — that is a server bug; track a fixed release with support.
+
+**Reverse proxy workaround.** If the app mounts OAuth at paths without the `/oauth/` prefix but discovery still lists `/oauth/...`, add rewrite rules so public URLs match discovery. Example for nginx (adjust if your upstream paths differ):
+
+```nginx
+location ^~ /oauth/ {
+  rewrite ^/oauth/(.*)$ /$1 break;
+  proxy_pass http://127.0.0.1:3100;
+  proxy_set_header Host $host;
+  proxy_set_header X-Forwarded-Proto $scheme;
+  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+}
+```
+
+Ensure `MCP_TRUST_PROXY=true` and `MCP_ENFORCE_HTTPS=true` when TLS terminates at the proxy.
+
+**Dynamic client registration** requires `MCP_CLIENT_REGISTRATION_SECRET` in the container environment and the same secret in the client’s advanced OAuth settings. You also need `MCP_OAUTH_ADMIN_PASSWORD` for the consent UI. A **500** on `POST /register` (or `/oauth/clients/register`) with no `clients.json` usually means the registration handler failed before writing storage — capture container logs with `MCP_LOG_LEVEL=debug` and contact **support@daddar.io** with your image digest (`docker image inspect daddariotech/whmcs-mcp:latest --format '{{.Id}}'`).
+
+**Bearer tokens in Docker.** The installer runs:
+
+`docker exec -it whmcs-mcp node dist/scripts/auth-cli.js generate --name "My AI" --scopes "mcp:read,mcp:write"`
+
+Some image tags omit `dist/scripts/`; try `whmcs-mcp token generate` inside the container if a CLI binary exists, or generate a token using the same version installed on a host with the full package. If neither exists, request an image build that ships the auth CLI.
+
 ---
 
 ## Real-Time Webhook Push
@@ -264,7 +294,9 @@ See [docs/WEBHOOKS.md](docs/WEBHOOKS.md) for setup instructions.
 docker compose -f docker-compose.marketplace.yml up -d
 ```
 
-Generates tokens:
+(`docker-compose.marketplace.yml` lives in this repository; the Docker installer downloads it if missing.)
+
+Generates tokens (when the image includes the script):
 
 ```bash
 docker exec -it whmcs-mcp node dist/scripts/auth-cli.js generate \
