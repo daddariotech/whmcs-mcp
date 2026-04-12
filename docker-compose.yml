@@ -46,7 +46,10 @@ services:
       # NEVER change or delete this value — it anchors your server-side trial period.
       INSTALL_ID: "${INSTALL_ID:-}"
       # Security
-      MCP_ENFORCE_HTTPS: "${MCP_ENFORCE_HTTPS:-false}"   # set true when behind TLS proxy
+      # Set true whenever TLS terminates at a reverse proxy. Required for OAuth
+      # consent: connect.sid must be SameSite=None; Secure on HTTPS, or cross-site
+      # POST from Claude.ai will not send the session cookie (Lax omits it).
+      MCP_ENFORCE_HTTPS: "${MCP_ENFORCE_HTTPS:-false}"
       MCP_TRUST_PROXY: "${MCP_TRUST_PROXY:-true}"
       MCP_ALLOWED_ORIGINS: "${MCP_ALLOWED_ORIGINS:-*}"
 
