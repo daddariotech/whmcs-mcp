@@ -106,16 +106,14 @@ else
   read -r WHMCS_MCP_HOST
 fi
 
-# ── Auth mode ─────────────────────────────────────────────────────────────────
+# ── OAuth consent page (optional) ────────────────────────────────────────────
 echo ""
-echo -e "${BOLD}Authentication${RESET}"
-echo "  simple = bearer tokens (recommended for most users)"
-echo "  oauth  = full OAuth 2.0 PKCE (for multi-user / ChatGPT Actions)"
+echo -e "${BOLD}OAuth Consent Page (optional)${RESET}"
+echo "  Bearer tokens work without this. Set a password only if you want to connect"
+echo "  Claude.ai or ChatGPT Actions via OAuth PKCE."
 echo ""
-ask "Auth mode [simple/oauth] (default: simple):"
-read -r MCP_AUTH_MODE
-MCP_AUTH_MODE="${MCP_AUTH_MODE:-simple}"
-[[ "$MCP_AUTH_MODE" == "simple" || "$MCP_AUTH_MODE" == "oauth" ]] || MCP_AUTH_MODE="simple"
+ask "OAuth admin password (press Enter to skip — bearer tokens only):"
+read -rs MCP_OAUTH_ADMIN_PASSWORD; echo
 
 # ── Write .env ────────────────────────────────────────────────────────────────
 info "Writing $ENV_FILE..."
@@ -140,9 +138,9 @@ MCP_HTTP_PORT=3100
 MCP_HTTP_HOST=0.0.0.0
 WHMCS_MCP_HOST=${WHMCS_MCP_HOST:-localhost}
 
-# Authentication
-MCP_AUTH_MODE=${MCP_AUTH_MODE}
-MCP_REQUIRE_AUTH=true
+# Authentication (unified — bearer tokens always work)
+# Set MCP_OAUTH_ADMIN_PASSWORD to also enable OAuth PKCE (Claude.ai, ChatGPT Actions)
+${MCP_OAUTH_ADMIN_PASSWORD:+MCP_OAUTH_ADMIN_PASSWORD=${MCP_OAUTH_ADMIN_PASSWORD}}
 
 # Security
 MCP_ENFORCE_HTTPS=${ENFORCE_HTTPS}
@@ -207,14 +205,12 @@ else
   warn "Server did not respond in time. Check logs: docker logs whmcs-mcp"
 fi
 
-# ── Generate first token (simple mode only) ───────────────────────────────────
-if [[ "$MCP_AUTH_MODE" == "simple" ]]; then
-  echo ""
-  info "Generating your first bearer token..."
-  TOKEN_OUTPUT=$(docker exec whmcs-mcp node dist/scripts/auth-cli.js generate \
-    --name "My AI" --scopes "mcp:read,mcp:write" 2>&1 || true)
-  echo "$TOKEN_OUTPUT"
-fi
+# ── Generate first bearer token ───────────────────────────────────────────────
+echo ""
+info "Generating your first bearer token..."
+TOKEN_OUTPUT=$(docker exec whmcs-mcp node dist/scripts/auth-cli.js generate \
+  --name "My AI" --scopes "mcp:read,mcp:write" 2>&1 || true)
+echo "$TOKEN_OUTPUT"
 
 # ── Done ──────────────────────────────────────────────────────────────────────
 echo ""
