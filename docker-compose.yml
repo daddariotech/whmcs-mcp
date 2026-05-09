@@ -35,10 +35,6 @@ services:
       MCP_HTTP_PORT: "3100"
       MCP_HTTP_HOST: "0.0.0.0"
 
-      # Auth mode: "simple" (bearer tokens) or "oauth" (full OAuth 2.0 PKCE)
-      MCP_AUTH_MODE: "${MCP_AUTH_MODE:-simple}"
-      MCP_REQUIRE_AUTH: "true"
-
       # License (leave blank for 14-day trial)
       LICENSE_KEY: "${LICENSE_KEY:-}"
       # Stable UUID that identifies this installation server-side.
