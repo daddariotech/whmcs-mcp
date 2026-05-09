@@ -24,11 +24,11 @@ In WHMCS Admin: **Setup → Staff Management → API Roles → Add Role**
 Choose a permission preset based on how much you trust the AI:
 
 **Minimum permissions (read-only — AI can look but not touch):**
-`GetClients` `GetClientsDetails` `GetClientsProducts` `GetClientsDomains` `GetClientsAddons` `GetClientGroups` `GetContacts` `GetEmails` `GetInvoice` `GetInvoices` `GetOrders` `GetOrderStatuses` `GetProducts` `GetTicket` `GetTickets` `GetSupportDepartments` `GetQuotes` `GetCredits` `GetTransactions` `GetStats` `GetActivityLog` `GetCancelledPackages` `GetEmailTemplates` `GetCurrencies` `GetPaymentMethods` `GetHealthStatus`
+`GetClients` `GetClientsDetails` `GetClientsProducts` `GetClientsDomains` `GetClientsAddons` `GetClientGroups` `GetContacts` `GetEmails` `GetInvoice` `GetInvoices` `GetOrders` `GetOrderStatuses` `GetProducts` `GetTicket` `GetTickets` `GetSupportDepartments` `GetQuotes` `GetCredits` `GetTransactions` `GetStats` `GetActivityLog` `GetCancelledPackages` `GetEmailTemplates` `GetCurrencies` `GetPaymentMethods` `GetHealthStatus` `GetProductGroups` `GetRegistrars` `GetServers` `GetAffiliates` `GetAnnouncements` `GetSupportStatuses` `GetTicketCounts` `GetTicketPredefinedCats` `GetAdminUsers` `GetToDoItems` `GetToDoItemStatuses` `GetStaffOnline` `DomainWhois` `DomainGetNameservers` `DomainGetLockingStatus` `GetTLDPricing` `GetPromotions`
 
 **Maximum permissions (full access — AI can take any action):**
 Everything above, plus:
-`AddClient` `UpdateClient` `AddClientNote` `AddContact` `UpdateContact` `CreateInvoice` `AddInvoicePayment` `AddOrder` `AcceptOrder` `CancelOrder` `OpenTicket` `AddTicketReply` `UpdateTicket` `CreateQuote` `UpdateQuote` `SendQuote` `AcceptQuote` `DeleteQuote` `AddCredit` `ApplyCredit` `AddBillableItem` `SendEmail` `UpdateClientProduct` `ModuleSuspend` `ModuleUnsuspend` `ModuleTerminate` `ModuleCreate` `UpgradeProduct`
+`AddClient` `UpdateClient` `AddClientNote` `AddContact` `UpdateContact` `CreateInvoice` `AddInvoicePayment` `AddOrder` `AcceptOrder` `CancelOrder` `OpenTicket` `AddTicketReply` `UpdateTicket` `CreateQuote` `UpdateQuote` `SendQuote` `AcceptQuote` `DeleteQuote` `AddCredit` `ApplyCredit` `AddBillableItem` `SendEmail` `UpdateClientProduct` `ModuleSuspend` `ModuleUnsuspend` `ModuleTerminate` `ModuleCreate` `UpgradeProduct` `RegisterDomain` `TransferDomain` `RenewDomain` `DomainUpdateNameservers` `DomainUpdateLockingStatus` `DomainToggleIdProtect` `FraudOrder` `PendingOrder` `UpdateInvoice` `ModuleChangePw` `LogActivity` `AddTicketNote` `AffiliateActivate`
 
 > **Tip:** Start with minimum permissions and add write permissions only as needed. This limits blast radius if an AI client goes rogue or gets a bad prompt.
 
@@ -86,31 +86,92 @@ No license? A **14-day free trial** starts automatically on first run.
 
 ## What You Can Do
 
-### 56 WHMCS Tools
+### 86 WHMCS Tools
 
 | Category | Tools |
 |---|---|
 | **Clients** | `get_client` `list_clients` `add_client` `update_client` `get_client_details` `get_client_groups` `get_client_emails` `get_client_domains` `get_client_addons` `add_client_note` |
-| **Invoices** | `get_invoice` `list_invoices` `create_invoice` `add_invoice_payment` `get_overdue_invoices` `get_transactions` |
-| **Orders** | `add_order` `get_orders` `accept_order` `cancel_order` `get_order_statuses` |
+| **Invoices** | `get_invoice` `list_invoices` `create_invoice` `add_invoice_payment` `get_overdue_invoices` `get_transactions` `update_invoice` |
+| **Orders** | `add_order` `get_orders` `accept_order` `cancel_order` `get_order_statuses` `fraud_order` `pending_order` |
 | **Services** | `list_services` `update_service` `upgrade_product` `module_create` `module_suspend` `module_unsuspend` `module_terminate` `get_cancelled_packages` |
-| **Tickets** | `get_ticket` `list_tickets` `open_ticket` `add_ticket_reply` `update_ticket` `get_support_departments` |
+| **Tickets** | `get_ticket` `list_tickets` `open_ticket` `add_ticket_reply` `update_ticket` `get_support_departments` `add_ticket_note` `get_support_statuses` `get_ticket_counts` `get_ticket_predefined_categories` |
 | **Quotes** | `get_quotes` `create_quote` `send_quote` `accept_quote` `update_quote` `delete_quote` |
 | **Contacts** | `get_contacts` `add_contact` `update_contact` |
 | **Credits** | `get_credits` `add_credit` `apply_credit` |
 | **Billing** | `add_billable_item` `get_payment_methods` `get_currencies` |
 | **Email** | `send_email` `get_email_templates` |
-| **Products** | `get_products` |
+| **Products** | `get_products` `get_product_groups` |
+| **Domains** | `register_domain` `transfer_domain` `renew_domain` `get_domain_whois` `get_domain_nameservers` `update_domain_nameservers` `get_domain_lock_status` `update_domain_lock_status` `get_tld_pricing` |
+| **Admin** | `get_admin_users` `get_staff_online` `get_whmcs_details` `log_activity` `get_activity_log` |
+| **Affiliates** | `get_affiliates` `activate_affiliate` |
+| **Promotions** | `get_promotions` |
+| **Servers** | `get_servers` `module_change_password` |
+| **System** | `get_health_status` `get_todo_items` `get_todo_item_statuses` `get_announcements` `get_registrars` `get_stats` |
 | **Reports** | `get_stats` `get_activity_log` `get_transactions` |
-| **System** | `get_health_status` |
 
 All tools support `dryRun` mode — preview what would happen before making changes.
+
+### 24 Real-Time Resources
+
+Resources are read-only data endpoints that AI clients can subscribe to via `whmcs://` URIs. Data is served from a 60-second TTL cache.
+
+| URI | Description |
+|---|---|
+| `whmcs://stats` | Live system statistics (revenue, client counts, invoice totals) |
+| `whmcs://health` | Server health status |
+| `whmcs://system/info` | WHMCS installation details (version, PHP, database) |
+| `whmcs://products` | Full product and service catalog |
+| `whmcs://product-groups` | Product groups with product counts |
+| `whmcs://tld-pricing` | Domain TLD registration/transfer/renewal pricing |
+| `whmcs://promotions` | Active promotions and coupon codes |
+| `whmcs://order-statuses` | Available order status values |
+| `whmcs://currencies` | Configured currencies with exchange rates |
+| `whmcs://payment-methods` | Active payment gateway modules |
+| `whmcs://registrars` | Configured domain registrar modules |
+| `whmcs://servers` | Provisioning servers |
+| `whmcs://client-groups` | Client group definitions |
+| `whmcs://affiliates` | Registered affiliate accounts |
+| `whmcs://email-templates` | Email template library |
+| `whmcs://announcements` | Published announcements |
+| `whmcs://support/departments` | Support departments |
+| `whmcs://support/statuses` | Available ticket status values |
+| `whmcs://support/ticket-counts` | Ticket counts by department and status |
+| `whmcs://support/predefined-categories` | Predefined ticket reply categories |
+| `whmcs://admin/users` | Admin user accounts |
+| `whmcs://admin/todo` | Admin to-do items |
+| `whmcs://admin/todo-statuses` | Available to-do item status values |
+| `whmcs://admin/staff-online` | Staff currently logged into the admin area |
+
+### 18 Workflow Prompts
+
+Prompts are pre-built workflow templates that MCP clients surface as one-click guided interactions.
+
+| Prompt | Description |
+|---|---|
+| `new_client` | Guided new client account creation |
+| `new_order` | Place and accept a product order for a client |
+| `new_invoice` | Create a custom invoice with optional send |
+| `new_quote` | Draft a sales quote with send/accept lifecycle |
+| `ticket_response` | Load a ticket, draft a professional staff reply |
+| `client_onboarding` | Full account onboarding review checklist |
+| `fraud_investigation` | Security audit for a suspicious order |
+| `bulk_invoice_reminder` | Find overdue invoices and send payment reminders |
+| `revenue_report` | MRR + outstanding + paid financial breakdown |
+| `client_health_check` | Deep account scorecard (services, billing, support) |
+| `domain_expiry_audit` | Flag at-risk domains, draft renewal reminders |
+| `new_product_setup` | Step-by-step product configuration guide |
+| `churn_risk_report` | Ranked churn-risk table with recommended actions |
+| `support_queue_triage` | Priority-ordered ticket queue with quick-win suggestions |
+| `affiliate_performance` | Top performers, commissions, activation gaps |
+| `service_renewal_forecast` | N-month renewal revenue projection |
+| `addon_upsell_opportunities` | Missing add-on detection + upsell quote generation |
+| `promo_effectiveness` | Promo code usage, revenue impact, and expiry analysis |
 
 ### vs other WHMCS MCP servers
 
 | Feature | WHMCS MCP Server (us) | scarecr0w12/whmcs-mcp-tool | MX Modules |
 |---|---|---|---|
-| Tools | 56 | ~50 | ~20 |
+| Tools | 86 | ~50 | ~20 |
 | HTTP transport (ChatGPT, Claude remote) | Yes | **No — stdio only** | Yes |
 | Authentication | OAuth 2.0 PKCE + bearer tokens | **None** | Static tokens only |
 | One-click install | Yes (`curl \| bash`) | Manual (clone + npm) | Manual |
@@ -173,8 +234,10 @@ Copy `.env.example` to `.env` and fill in your values.
 
 | Variable | Description | Default |
 |---|---|---|
-| `MCP_AUTH_MODE` | `simple` (bearer tokens) or `oauth` | `simple` |
-| `MCP_REQUIRE_AUTH` | Enforce authentication | `true` |
+| `MCP_OAUTH_ADMIN_PASSWORD` | Enables the `/authorize` consent UI for OAuth PKCE flows | (unset — consent UI disabled) |
+| `MCP_AUTH_TOKENS_FILE` | Path to bearer token store | `/app/data/tokens.json` |
+
+> **Note (v2.1.0):** `MCP_AUTH_MODE` and `MCP_REQUIRE_AUTH` have been removed. The server always runs the full auth stack — bearer tokens and OAuth are both available in every configuration. Auth is always enforced in HTTP mode.
 
 **Webhooks (optional):**
 
