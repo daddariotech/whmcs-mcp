@@ -5,6 +5,21 @@ All notable changes to the WHMCS MCP Server project will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2026-06-26
+
+### Added
+
+- **`adminUsername` parameter on `open_ticket`** — optional field that passes `adminusername` to
+  the WHMCS `OpenTicket` API, attributing the ticket to a staff member rather than the client.
+  When set, the ticket appears as staff-initiated in the WHMCS admin area. Requested by
+  HostingB2B.
+
+- **Multi-line invoice support on `create_invoice`** — new optional `items[]` array (up to 50
+  entries, each with `description`, `amount`, and optional `taxed` boolean) maps to WHMCS's
+  numbered line-item fields (`itemdescription1`/`itemamount1`/`itemtaxed1`, etc.). When `items`
+  is provided it takes precedence over the legacy `itemDescription`/`itemAmount` fields, which
+  remain fully backward-compatible. Resolves issue #195.
+
 ## [2.1.0] - 2026-05-08
 
 ### Added
