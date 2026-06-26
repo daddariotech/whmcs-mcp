@@ -235,9 +235,26 @@ Copy `.env.example` to `.env` and fill in your values.
 | Variable | Description | Default |
 |---|---|---|
 | `MCP_OAUTH_ADMIN_PASSWORD` | Enables the `/authorize` consent UI for OAuth PKCE flows | (unset — consent UI disabled) |
+| `MCP_OAUTH_SESSION_SECRET` | Secret used to sign OAuth CSRF session cookies. Generate with `openssl rand -hex 32`. | (auto-generated ephemeral — set this in production) |
 | `MCP_AUTH_TOKENS_FILE` | Path to bearer token store | `/app/data/tokens.json` |
 
 > **Note (v2.1.0):** `MCP_AUTH_MODE` and `MCP_REQUIRE_AUTH` have been removed. The server always runs the full auth stack — bearer tokens and OAuth are both available in every configuration. Auth is always enforced in HTTP mode.
+
+**Network / proxy:**
+
+| Variable | Description | Default |
+|---|---|---|
+| `MCP_TRUST_PROXY` | Set to `true` when the server runs behind a TLS-terminating reverse proxy (Traefik, nginx, etc.). Enables `X-Forwarded-*` header trust for correct IP detection and HTTPS enforcement. | `false` *(changed in v2.2.0 — set explicitly in production)* |
+
+**Observability (optional):**
+
+| Variable | Description | Default |
+|---|---|---|
+| `MCP_METRICS_ENABLED` | Enable Prometheus metrics endpoint | `true` |
+| `MCP_METRICS_PORT` | Port for `/metrics` endpoint | `9090` |
+| `PUSHGATEWAY_URL` | Prometheus Pushgateway URL for metric push | (unset) |
+| `PUSHGATEWAY_USER` | HTTP Basic Auth username for Pushgateway | (unset) |
+| `PUSHGATEWAY_PASSWORD` | HTTP Basic Auth password for Pushgateway | (unset) |
 
 **Webhooks (optional):**
 

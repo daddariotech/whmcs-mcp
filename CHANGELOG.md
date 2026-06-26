@@ -20,6 +20,52 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   is provided it takes precedence over the legacy `itemDescription`/`itemAmount` fields, which
   remain fully backward-compatible. Resolves issue #195.
 
+### Fixed
+
+- **`phpSerialize` — correct byte length for PHP wire format.** The `s:` length field now uses
+  the byte length of the *original* string, not the escaped copy, matching PHP's `unserialize`
+  expectation. Previously, strings containing `\`, `"`, or null bytes would produce an
+  incorrect length and fail to deserialize in WHMCS.
+
+- **`phpSerialize` — escape backslash, double-quote, and null bytes** in string values and
+  object keys to prevent serialization corruption in WHMCS API payloads.
+
+- **`create_invoice` / `update_client` / `get_ticket` / `add_ticket_note`** — each tool now
+  returns a validation error when no usable identifier is provided rather than forwarding an
+  empty request to WHMCS.
+
+- **`list_tickets` `status` field** — input capped at 50 characters to prevent oversized values
+  reaching the WHMCS API.
+
+- **Auth success counter** — metric now increments only after `verifyAccessToken` resolves
+  successfully, not before (previously could count failed auth attempts as successes).
+
+### Security
+
+- **Pushgateway credential externalized** — hardcoded Prometheus Pushgateway Basic Auth
+  credential removed. Configure via `PUSHGATEWAY_URL`, `PUSHGATEWAY_USER`, and
+  `PUSHGATEWAY_PASSWORD` environment variables.
+
+- **CIMD SSRF protection** — the CIMD auto-fetch now blocks requests to RFC1918, loopback,
+  link-local, and IPv6 internal address ranges, preventing server-side request forgery via
+  `software_statement` or `logo_uri` endpoints.
+
+- **OAuth consent page XSS fix** — scope tokens on the `/authorize` consent page are now
+  HTML-escaped before rendering, preventing injection via crafted scope strings.
+
+- **IP rate limiter extended to OAuth endpoints** — `/token`, `/authorize`, and `/register`
+  are now covered by the IP-based rate limiter in addition to `/mcp`.
+
+- **`MCP_TRUST_PROXY` default changed to `false`** — the server no longer trusts
+  `X-Forwarded-*` headers by default. Set `MCP_TRUST_PROXY=true` explicitly when running
+  behind a TLS-terminating reverse proxy (Traefik, nginx, etc.). Deployments using the
+  official Docker Compose stack are unaffected — the compose file already sets this explicitly.
+
+- **`MCP_OAUTH_SESSION_SECRET` empty-string guard** — an empty string value is now treated
+  the same as unset, causing the server to fall back to a randomly generated ephemeral secret
+  rather than signing sessions with an empty key. A warning is logged in production when no
+  secret is configured.
+
 ## [2.1.0] - 2026-05-08
 
 ### Added
