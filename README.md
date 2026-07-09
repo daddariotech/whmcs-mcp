@@ -24,11 +24,13 @@ In WHMCS Admin: **Setup → Staff Management → API Roles → Add Role**
 Choose a permission preset based on how much you trust the AI:
 
 **Minimum permissions (read-only — AI can look but not touch):**
-`GetClients` `GetClientsDetails` `GetClientsProducts` `GetClientsDomains` `GetClientsAddons` `GetClientGroups` `GetContacts` `GetEmails` `GetInvoice` `GetInvoices` `GetOrders` `GetOrderStatuses` `GetProducts` `GetTicket` `GetTickets` `GetSupportDepartments` `GetQuotes` `GetCredits` `GetTransactions` `GetStats` `GetActivityLog` `GetCancelledPackages` `GetEmailTemplates` `GetCurrencies` `GetPaymentMethods` `GetHealthStatus` `GetProductGroups` `GetRegistrars` `GetServers` `GetAffiliates` `GetAnnouncements` `GetSupportStatuses` `GetTicketCounts` `GetTicketPredefinedCats` `GetAdminUsers` `GetToDoItems` `GetToDoItemStatuses` `GetStaffOnline` `DomainWhois` `DomainGetNameservers` `DomainGetLockingStatus` `GetTLDPricing` `GetPromotions`
+`GetClients` `GetClientsDetails` `GetClientsProducts` `GetClientsDomains` `GetClientsAddons` `GetClientGroups` `GetContacts` `GetEmails` `GetInvoice` `GetInvoices` `GetOrders` `GetOrderStatuses` `GetProducts` `GetTicket` `GetTickets` `GetSupportDepartments` `GetQuotes` `GetCredits` `GetTransactions` `GetStats` `GetActivityLog` `GetCancelledPackages` `GetEmailTemplates` `GetCurrencies` `GetPaymentMethods` `GetHealthStatus` `GetProductGroups` `GetRegistrars` `GetServers` `GetAffiliates` `GetAnnouncements` `GetSupportStatuses` `GetTicketCounts` `GetTicketPredefinedCats` `GetAdminUsers` `GetToDoItems` `GetToDoItemStatuses` `GetStaffOnline` `DomainWhois` `DomainGetNameservers` `DomainGetLockingStatus` `GetTLDPricing` `GetPromotions` `GetProjects` `GetProject`
 
 **Maximum permissions (full access — AI can take any action):**
 Everything above, plus:
-`AddClient` `UpdateClient` `AddClientNote` `AddContact` `UpdateContact` `CreateInvoice` `AddInvoicePayment` `AddOrder` `AcceptOrder` `CancelOrder` `OpenTicket` `AddTicketReply` `UpdateTicket` `CreateQuote` `UpdateQuote` `SendQuote` `AcceptQuote` `DeleteQuote` `AddCredit` `ApplyCredit` `AddBillableItem` `SendEmail` `UpdateClientProduct` `ModuleSuspend` `ModuleUnsuspend` `ModuleTerminate` `ModuleCreate` `UpgradeProduct` `RegisterDomain` `TransferDomain` `RenewDomain` `DomainUpdateNameservers` `DomainUpdateLockingStatus` `DomainToggleIdProtect` `FraudOrder` `PendingOrder` `UpdateInvoice` `ModuleChangePw` `LogActivity` `AddTicketNote` `AffiliateActivate`
+`AddClient` `UpdateClient` `AddClientNote` `AddContact` `UpdateContact` `CreateInvoice` `AddInvoicePayment` `AddOrder` `AcceptOrder` `CancelOrder` `OpenTicket` `AddTicketReply` `UpdateTicket` `CreateQuote` `UpdateQuote` `SendQuote` `AcceptQuote` `DeleteQuote` `AddCredit` `ApplyCredit` `AddBillableItem` `SendEmail` `UpdateClientProduct` `ModuleSuspend` `ModuleUnsuspend` `ModuleTerminate` `ModuleCreate` `UpgradeProduct` `RegisterDomain` `TransferDomain` `RenewDomain` `DomainUpdateNameservers` `DomainUpdateLockingStatus` `DomainToggleIdProtect` `FraudOrder` `PendingOrder` `UpdateInvoice` `ModuleChangePw` `LogActivity` `AddTicketNote` `AffiliateActivate` `CreateProject` `UpdateProject` `AddProjectTask` `UpdateProjectTask` `DeleteProjectTask` `AddProjectMessage` `StartTaskTimer` `EndTaskTimer`
+
+> **Project Management tools:** `list_projects` through `end_task_timer` additionally require the WHMCS **Project Management addon** to be active (Setup → Addon Modules), regardless of API role permissions.
 
 > **Tip:** Start with minimum permissions and add write permissions only as needed. This limits blast radius if an AI client goes rogue or gets a bad prompt.
 
@@ -86,7 +88,7 @@ No license? A **14-day free trial** starts automatically on first run.
 
 ## What You Can Do
 
-### 86 WHMCS Tools
+### 96 WHMCS Tools
 
 | Category | Tools |
 |---|---|
@@ -108,6 +110,7 @@ No license? A **14-day free trial** starts automatically on first run.
 | **Servers** | `get_servers` `module_change_password` |
 | **System** | `get_health_status` `get_todo_items` `get_todo_item_statuses` `get_announcements` `get_registrars` `get_stats` |
 | **Reports** | `get_stats` `get_activity_log` `get_transactions` |
+| **Projects** | `list_projects` `get_project` `create_project` `update_project` `add_project_task` `update_project_task` `delete_project_task` `add_project_message` `start_task_timer` `end_task_timer` — requires the WHMCS **Project Management addon** to be active |
 
 All tools support `dryRun` mode — preview what would happen before making changes.
 

@@ -5,6 +5,26 @@ All notable changes to the WHMCS MCP Server project will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.0] - 2026-07-09
+
+### Added
+
+- **10 Project Management tools** — full coverage of the WHMCS Project Management addon API
+  (requires the addon to be active). Requested by customer.
+
+  | Tool | Description |
+  |------|-------------|
+  | `list_projects` | List projects with filters (status, userid, adminid, title, completed) |
+  | `get_project` | Get a single project including tasks, time logs, and messages |
+  | `create_project` | Create a new project (title, adminid required; dryRun supported) |
+  | `update_project` | Update project fields: title, status, due date, notes, associations |
+  | `add_project_task` | Add a task to a project (duedate required; dryRun supported) |
+  | `update_project_task` | Update a task: title, notes, due date, completed flag |
+  | `delete_project_task` | Permanently delete a task from a project (dryRun supported) |
+  | `add_project_message` | Post a message to a project's discussion thread |
+  | `start_task_timer` | Start a time-tracking timer on a project task |
+  | `end_task_timer` | Stop a running time-tracking timer |
+
 ## [2.2.0] - 2026-06-26
 
 ### Added
