@@ -5,6 +5,19 @@ All notable changes to the WHMCS MCP Server project will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.1] - 2026-07-09
+
+### Fixed
+
+- **`start_task_timer` sent the wrong parameter name** — WHMCS 9.x expects `taskid` for the
+  `StartTaskTimer` API action, while the official API docs (and v2.3.0) used `timerid`, causing
+  a "Task ID Not Set" error. The client now sends both `taskid` and `timerid` for compatibility
+  across WHMCS versions. The tool input is renamed `timerId` → `taskId` to reflect what WHMCS
+  actually expects. Verified against a live WHMCS 9.0.3 install.
+- **`end_task_timer` docs clarified** — `timerId` is the timelog entry ID created by
+  `start_task_timer` (visible in `get_project` task timelogs), not the task ID. Passing the
+  task ID returns "Timer ID Not Found".
+
 ## [2.3.0] - 2026-07-09
 
 ### Added
