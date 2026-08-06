@@ -5,6 +5,39 @@ All notable changes to the WHMCS MCP Server project will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.2] - 2026-08-06
+
+### Fixed
+
+- **`register_domain`, `transfer_domain`, and `renew_domain` called WHMCS API actions that do not
+  exist.** All three used a `<Verb>Domain` action name where WHMCS expects the `Domain<Verb>` form
+  used by every other domain action (`DomainWhois`, `DomainGetNameservers`, and so on):
+
+  | Tool | Was sending | Now sends |
+  |------|-------------|-----------|
+  | `register_domain` | `RegisterDomain` | `DomainRegister` |
+  | `transfer_domain` | `TransferDomain` | `DomainTransfer` |
+  | `renew_domain` | `RenewDomain` | `DomainRenew` |
+
+  WHMCS answers an unknown action with HTTP 200 and `{"result":"error","message":"API Function
+  Not Found"}`, so these three tools reported a WHMCS-side error while never reaching the
+  registrar — no domain was ever registered, transferred, or renewed. Verified against a live
+  WHMCS 9.0.3 install: each old name returns "API Function Not Found", and each new name is
+  accepted. Parameter mappings were already correct and are unchanged.
+
+### Changed
+
+- **API role permission names for the three domain tools corrected in the README.** The
+  permissions to grant are `DomainRegister`, `DomainTransfer`, and `DomainRenew`. The previously
+  documented `RegisterDomain` / `TransferDomain` / `RenewDomain` are not real WHMCS permission
+  keys and were silently ignored when granted.
+
+> **Action required if you use these three tools.** Update your WHMCS API role
+> (Configuration → API Credentials → Roles) to grant `DomainRegister`, `DomainTransfer`, and/or
+> `DomainRenew`. Without the matching permission the corrected action returns HTTP 403 instead of
+> the old "API Function Not Found". `register_domain` and `transfer_domain` incur registrar
+> charges, so grant those two deliberately.
+
 ## [2.3.1] - 2026-07-09
 
 ### Fixed

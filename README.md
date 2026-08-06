@@ -28,9 +28,17 @@ Choose a permission preset based on how much you trust the AI:
 
 **Maximum permissions (full access — AI can take any action):**
 Everything above, plus:
-`AddClient` `UpdateClient` `AddClientNote` `AddContact` `UpdateContact` `CreateInvoice` `AddInvoicePayment` `AddOrder` `AcceptOrder` `CancelOrder` `OpenTicket` `AddTicketReply` `UpdateTicket` `CreateQuote` `UpdateQuote` `SendQuote` `AcceptQuote` `DeleteQuote` `AddCredit` `ApplyCredit` `AddBillableItem` `SendEmail` `UpdateClientProduct` `ModuleSuspend` `ModuleUnsuspend` `ModuleTerminate` `ModuleCreate` `UpgradeProduct` `RegisterDomain` `TransferDomain` `RenewDomain` `DomainUpdateNameservers` `DomainUpdateLockingStatus` `DomainToggleIdProtect` `FraudOrder` `PendingOrder` `UpdateInvoice` `ModuleChangePw` `LogActivity` `AddTicketNote` `AffiliateActivate` `CreateProject` `UpdateProject` `AddProjectTask` `UpdateProjectTask` `DeleteProjectTask` `AddProjectMessage` `StartTaskTimer` `EndTaskTimer`
+`AddClient` `UpdateClient` `AddClientNote` `AddContact` `UpdateContact` `CreateInvoice` `AddInvoicePayment` `AddOrder` `AcceptOrder` `CancelOrder` `OpenTicket` `AddTicketReply` `UpdateTicket` `CreateQuote` `UpdateQuote` `SendQuote` `AcceptQuote` `DeleteQuote` `AddCredit` `ApplyCredit` `AddBillableItem` `SendEmail` `UpdateClientProduct` `ModuleSuspend` `ModuleUnsuspend` `ModuleTerminate` `ModuleCreate` `UpgradeProduct` `DomainRegister` `DomainTransfer` `DomainRenew` `DomainUpdateNameservers` `DomainUpdateLockingStatus` `DomainToggleIdProtect` `FraudOrder` `PendingOrder` `UpdateInvoice` `ModuleChangePw` `LogActivity` `AddTicketNote` `AffiliateActivate` `CreateProject` `UpdateProject` `AddProjectTask` `UpdateProjectTask` `DeleteProjectTask` `AddProjectMessage` `StartTaskTimer` `EndTaskTimer`
 
 > **Project Management tools:** `list_projects` through `end_task_timer` additionally require the WHMCS **Project Management addon** to be active (Setup → Addon Modules), regardless of API role permissions.
+
+> **Domain write permissions:** `register_domain`, `transfer_domain`, and `renew_domain` require
+> `DomainRegister`, `DomainTransfer`, and `DomainRenew` respectively. Note the `Domain` prefix
+> comes first — `RegisterDomain` / `TransferDomain` / `RenewDomain` are not valid WHMCS permission
+> keys and are silently ignored if granted. If a domain tool returns HTTP 403, the matching
+> permission is missing from your role. Upgrading from 2.3.1 or earlier? See the
+> [2.3.2 changelog entry](CHANGELOG.md) — you need to re-grant these three under their correct
+> names.
 
 > **Tip:** Start with minimum permissions and add write permissions only as needed. This limits blast radius if an AI client goes rogue or gets a bad prompt.
 
