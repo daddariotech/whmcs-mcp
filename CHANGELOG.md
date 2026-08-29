@@ -5,6 +5,30 @@ All notable changes to the WHMCS MCP Server project will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.4] - 2026-08-29
+
+### Added
+
+- **`update_client` accepts `companyname`, `notes`, and `customfields`.** Same encoding as
+  `add_client` so an existing profile can be completed (B2B/B2C, company) without a new account.
+- **`register_domain` accepts `domainid`.** Retries WHMCS `DomainRegister` on an existing
+  domain row (the path needed after CIRA additional fields are saved). `domain` + `years`
+  remain valid for a new registration.
+
+## [2.3.3] - 2026-08-29
+
+### Added
+
+- **`add_client` accepts `customfields`, `companyname`, and `notes`.** DTS (and any WHMCS
+  with required client custom fields) rejects `AddClient` unless values like B2B/B2C are
+  supplied. `customfields` is a map of WHMCS field ID → value (e.g. `{"15": "B2B"}`); the
+  client encodes it as the base64 PHP-serialized payload WHMCS expects. `companyname` and
+  `notes` pass through as plain `AddClient` parameters.
+- **`add_order` accepts `domainFields`.** Per-domain TLD extras (CIRA Legal Type, CIRA
+  Agreement, WHOIS Opt-out, etc.) are encoded as `domainfields[n]` base64 PHP-serialized
+  maps. Without these, `.ca` registration fails at Enom with "Invalid Registrant information"
+  even when the client address is complete.
+
 ## [2.3.2] - 2026-08-06
 
 ### Fixed
