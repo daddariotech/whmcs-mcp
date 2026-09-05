@@ -1,6 +1,6 @@
 # WHMCS MCP Server
 
-**The first production-grade AI integration for WHMCS.** Connect ChatGPT, Claude, and Cursor directly to your WHMCS installation — manage clients, invoices, tickets, and services through natural language.
+**Production-grade AI integration for WHMCS.** Connect ChatGPT, Claude, and Cursor directly to your WHMCS installation — manage clients, invoices, tickets, and services through natural language.
 
 ```
 You: "Send a payment reminder to all clients with overdue invoices over $50"
