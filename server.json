@@ -1,0 +1,54 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.daddariotech/whmcs-mcp",
+  "title": "WHMCS MCP Server",
+  "description": "Connect Claude, ChatGPT, and Cursor to live WHMCS over MCP.",
+  "version": "2.3.4",
+  "websiteUrl": "https://daddar.io/whmcs-mcp",
+  "repository": {
+    "url": "https://github.com/daddariotech/whmcs-mcp",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "oci",
+      "identifier": "docker.io/daddariotech/whmcs-mcp:latest",
+      "runtimeHint": "docker",
+      "transport": {
+        "type": "streamable-http",
+        "url": "http://localhost:3100/mcp"
+      },
+      "environmentVariables": [
+        {
+          "name": "MCP_TRANSPORT",
+          "description": "Must be http for the streamable HTTP transport.",
+          "default": "http",
+          "isRequired": true
+        },
+        {
+          "name": "WHMCS_API_URL",
+          "description": "Base URL of your WHMCS install, e.g. https://billing.example.com",
+          "isRequired": true
+        },
+        {
+          "name": "WHMCS_IDENTIFIER",
+          "description": "WHMCS API credential identifier",
+          "isRequired": true,
+          "isSecret": true
+        },
+        {
+          "name": "WHMCS_SECRET",
+          "description": "WHMCS API credential secret",
+          "isRequired": true,
+          "isSecret": true
+        },
+        {
+          "name": "LICENSE_KEY",
+          "description": "Paid licence key. Omit to start the 14-day trial.",
+          "isRequired": false,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}
