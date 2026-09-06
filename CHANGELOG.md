@@ -5,6 +5,26 @@ All notable changes to the WHMCS MCP Server project will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **`open_ticket` — MCP elicitation for missing required fields (Milestone v2.1.1).** When a
+  caller omits any of the required fields (`clientid`/`email`, `subject`, `message`, `deptid`)
+  the tool no longer errors immediately. Instead it pauses the tool call and sends a structured
+  `elicitation/create` form to the client. The user fills in only the truly absent fields;
+  already-supplied values are untouched. `priority` is included in the form with a pre-filled
+  default of `medium` so the user can adjust it in the same step.
+
+  The implementation uses the SDK v2 `inputRequired` / `acceptedContent` write-once pattern,
+  which works on both 2026-07-28 connections (stateless return) and pre-2026-07-28 sessions
+  (push-style via the SDK legacy shim). Existing calls that already supply all required fields
+  are unaffected — no elicitation round-trip occurs.
+
+  Covered by `test/open-ticket.elicitation.test.ts` (10 scenarios: full args, all-missing,
+  partial-missing schema inspection, decline, cancel, priority defaulting, priority override,
+  dryRun, WHMCS API error propagation, adminUsername forwarding).
+
 ## [2.3.5] - 2026-09-06
 
 ### Added
