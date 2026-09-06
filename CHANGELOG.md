@@ -5,60 +5,15 @@ All notable changes to the WHMCS MCP Server project will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
-
-### Added
-
-- **`open_ticket` — MCP elicitation for missing required fields (Milestone v2.1.1).** When a
-  caller omits any of the required fields (`clientid`/`email`, `subject`, `message`, `deptid`)
-  the tool no longer errors immediately. Instead it pauses the tool call and sends a structured
-  `elicitation/create` form to the client. The user fills in only the truly absent fields;
-  already-supplied values are untouched. `priority` is included in the form with a pre-filled
-  default of `medium` so the user can adjust it in the same step.
-
-  The implementation uses the SDK v2 `inputRequired` / `acceptedContent` write-once pattern,
-  which works on both 2026-07-28 connections (stateless return) and pre-2026-07-28 sessions
-  (push-style via the SDK legacy shim). Existing calls that already supply all required fields
-  are unaffected — no elicitation round-trip occurs.
-
-  Covered by `test/open-ticket.elicitation.test.ts` (10 scenarios: full args, all-missing,
-  partial-missing schema inspection, decline, cancel, priority defaulting, priority override,
-  dryRun, WHMCS API error propagation, adminUsername forwarding).
-
 ## [2.3.5] - 2026-09-06
 
 ### Added
 
-- **`update_domain_donotrenew`** — set or clear the Do Not Renew flag on a
-  WHMCS domain. When enabled, WHMCS will not generate a renewal invoice for
-  the domain on its next due date.
-
-  | Parameter | Type | Notes |
-  |-----------|------|-------|
-  | `domainid` | integer | WHMCS domain ID. Either this or `domain` is required. |
-  | `domain` | string | Domain name. Resolved to a `domainid` via `GetClientsDomains` when supplied without `domainid`. |
-  | `donotrenew` | boolean | `true` = enable Do Not Renew, `false` = disable Do Not Renew. |
-  | `dryRun` | boolean | If `true`, returns a preview string and makes no changes. |
-
-  **WHMCS API role permission required:** `UpdateClientDomain`. When using
-  `domain` instead of `domainid` the tool also calls `GetClientsDomains`, so
-  that permission must be granted too (it is already in the read-only minimum set).
-
-  **WHMCS API actions used:**
-  - `GetClientsDomains` — domain-name → ID lookup (only when `domainid` is omitted)
-  - `UpdateClientDomain` — sets the `donotrenew` field on `tbldomains`
-
-  **Example dryRun responses:**
-  ```
-  [dryRun] Would enable Do Not Renew for domain daddariodns.com (ID 16)
-  [dryRun] Would disable Do Not Renew for domain ID 16 (ID 16)
-  ```
-
-  **Example success responses:**
-  ```
-  Do Not Renew enabled for domain daddariodns.com (ID 16).
-  Do Not Renew disabled for domain daddariodns.com (ID 16).
-  ```
+- **`update_domain_donotrenew` tool.** Sets or clears the do-not-renew flag on a WHMCS
+  domain record via `UpdateClientDomain`. Accepts `domainid` (int) or `domain` (string);
+  when only the domain name is supplied, the ID is resolved automatically via
+  `GetClientsDomains`. Supports `dryRun=true` to preview without applying. Use
+  `donotrenew=true` to stop auto-renewal, `donotrenew=false` to re-enable it.
 
 ## [2.3.4] - 2026-08-29
 
