@@ -5,6 +5,41 @@ All notable changes to the WHMCS MCP Server project will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.5] - 2026-09-06
+
+### Added
+
+- **`update_domain_donotrenew`** — set or clear the Do Not Renew flag on a
+  WHMCS domain. When enabled, WHMCS will not generate a renewal invoice for
+  the domain on its next due date.
+
+  | Parameter | Type | Notes |
+  |-----------|------|-------|
+  | `domainid` | integer | WHMCS domain ID. Either this or `domain` is required. |
+  | `domain` | string | Domain name. Resolved to a `domainid` via `GetClientsDomains` when supplied without `domainid`. |
+  | `donotrenew` | boolean | `true` = enable Do Not Renew, `false` = disable Do Not Renew. |
+  | `dryRun` | boolean | If `true`, returns a preview string and makes no changes. |
+
+  **WHMCS API role permission required:** `UpdateClientDomain`. When using
+  `domain` instead of `domainid` the tool also calls `GetClientsDomains`, so
+  that permission must be granted too (it is already in the read-only minimum set).
+
+  **WHMCS API actions used:**
+  - `GetClientsDomains` — domain-name → ID lookup (only when `domainid` is omitted)
+  - `UpdateClientDomain` — sets the `donotrenew` field on `tbldomains`
+
+  **Example dryRun responses:**
+  ```
+  [dryRun] Would enable Do Not Renew for domain daddariodns.com (ID 16)
+  [dryRun] Would disable Do Not Renew for domain ID 16 (ID 16)
+  ```
+
+  **Example success responses:**
+  ```
+  Do Not Renew enabled for domain daddariodns.com (ID 16).
+  Do Not Renew disabled for domain daddariodns.com (ID 16).
+  ```
+
 ## [2.3.4] - 2026-08-29
 
 ### Added

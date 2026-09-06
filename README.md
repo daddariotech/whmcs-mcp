@@ -28,7 +28,7 @@ Choose a permission preset based on how much you trust the AI:
 
 **Maximum permissions (full access — AI can take any action):**
 Everything above, plus:
-`AddClient` `UpdateClient` `AddClientNote` `AddContact` `UpdateContact` `CreateInvoice` `AddInvoicePayment` `AddOrder` `AcceptOrder` `CancelOrder` `OpenTicket` `AddTicketReply` `UpdateTicket` `CreateQuote` `UpdateQuote` `SendQuote` `AcceptQuote` `DeleteQuote` `AddCredit` `ApplyCredit` `AddBillableItem` `SendEmail` `UpdateClientProduct` `ModuleSuspend` `ModuleUnsuspend` `ModuleTerminate` `ModuleCreate` `UpgradeProduct` `DomainRegister` `DomainTransfer` `DomainRenew` `DomainUpdateNameservers` `DomainUpdateLockingStatus` `DomainToggleIdProtect` `FraudOrder` `PendingOrder` `UpdateInvoice` `ModuleChangePw` `LogActivity` `AddTicketNote` `AffiliateActivate` `CreateProject` `UpdateProject` `AddProjectTask` `UpdateProjectTask` `DeleteProjectTask` `AddProjectMessage` `StartTaskTimer` `EndTaskTimer`
+`AddClient` `UpdateClient` `AddClientNote` `AddContact` `UpdateContact` `CreateInvoice` `AddInvoicePayment` `AddOrder` `AcceptOrder` `CancelOrder` `OpenTicket` `AddTicketReply` `UpdateTicket` `CreateQuote` `UpdateQuote` `SendQuote` `AcceptQuote` `DeleteQuote` `AddCredit` `ApplyCredit` `AddBillableItem` `SendEmail` `UpdateClientProduct` `ModuleSuspend` `ModuleUnsuspend` `ModuleTerminate` `ModuleCreate` `UpgradeProduct` `DomainRegister` `DomainTransfer` `DomainRenew` `DomainUpdateNameservers` `DomainUpdateLockingStatus` `DomainToggleIdProtect` `UpdateClientDomain` `FraudOrder` `PendingOrder` `UpdateInvoice` `ModuleChangePw` `LogActivity` `AddTicketNote` `AffiliateActivate` `CreateProject` `UpdateProject` `AddProjectTask` `UpdateProjectTask` `DeleteProjectTask` `AddProjectMessage` `StartTaskTimer` `EndTaskTimer`
 
 > **Project Management tools:** `list_projects` through `end_task_timer` additionally require the WHMCS **Project Management addon** to be active (Setup → Addon Modules), regardless of API role permissions.
 
@@ -39,6 +39,11 @@ Everything above, plus:
 > permission is missing from your role. Upgrading from 2.3.1 or earlier? See the
 > [2.3.2 changelog entry](CHANGELOG.md) — you need to re-grant these three under their correct
 > names.
+>
+> `update_domain_donotrenew` requires `UpdateClientDomain`. Unlike the registrar-level domain
+> tools, this tool writes directly to the WHMCS database record (it does not contact the registrar)
+> and only requires `GetClientsDomains` in addition when you supply a domain name instead of a
+> domain ID.
 
 > **Tip:** Start with minimum permissions and add write permissions only as needed. This limits blast radius if an AI client goes rogue or gets a bad prompt.
 
@@ -96,7 +101,7 @@ No license? A **14-day free trial** starts automatically on first run.
 
 ## What You Can Do
 
-### 96 WHMCS Tools
+### 97 WHMCS Tools
 
 | Category | Tools |
 |---|---|
@@ -111,7 +116,7 @@ No license? A **14-day free trial** starts automatically on first run.
 | **Billing** | `add_billable_item` `get_payment_methods` `get_currencies` |
 | **Email** | `send_email` `get_email_templates` |
 | **Products** | `get_products` `get_product_groups` |
-| **Domains** | `register_domain` `transfer_domain` `renew_domain` `get_domain_whois` `get_domain_nameservers` `update_domain_nameservers` `get_domain_lock_status` `update_domain_lock_status` `get_tld_pricing` |
+| **Domains** | `register_domain` `transfer_domain` `renew_domain` `get_domain_whois` `get_domain_nameservers` `update_domain_nameservers` `get_domain_lock_status` `update_domain_lock_status` `update_domain_donotrenew` `get_tld_pricing` |
 | **Admin** | `get_admin_users` `get_staff_online` `get_whmcs_details` `log_activity` `get_activity_log` |
 | **Affiliates** | `get_affiliates` `activate_affiliate` |
 | **Promotions** | `get_promotions` |
