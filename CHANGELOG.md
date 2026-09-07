@@ -5,32 +5,6 @@ All notable changes to the WHMCS MCP Server project will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.3.6] - 2026-09-07
-
-### Added
-
-- **`create_product` tool.** Creates a new product/package in the WHMCS product catalog
-  via the `AddProduct` Admin API action. Accepts `name` and `gid` (required), plus optional
-  `type` (`hostingaccount`, `reselleraccount`, `server`, `other`), `paytype` (`free`,
-  `onetime`, `recurring`), `description`, `hidden`, `showdomainoptions`, `welcomeemail`,
-  `stockcontrol`, `qty`, `module`, and a `pricing` array of
-  `{ currencyId, billingCycle, price }` entries — each becoming a
-  `pricing[currencyId][billingCycle]` form field as WHMCS requires. Supports
-  `dryRun=true` to preview the call without creating anything.
-  Bookkeeper can use this tool to land the **Managed WP Care** SKU in WHMCS once
-  Stefano confirms the price: call `get_product_groups` first to identify the right
-  group ID, then call `create_product` with the confirmed pricing.
-
-## [2.3.5] - 2026-09-06
-
-### Added
-
-- **`update_domain_donotrenew` tool.** Sets or clears the do-not-renew flag on a WHMCS
-  domain record via `UpdateClientDomain`. Accepts `domainid` (int) or `domain` (string);
-  when only the domain name is supplied, the ID is resolved automatically via
-  `GetClientsDomains`. Supports `dryRun=true` to preview without applying. Use
-  `donotrenew=true` to stop auto-renewal, `donotrenew=false` to re-enable it.
-
 ## [2.3.4] - 2026-08-29
 
 ### Added
