@@ -96,7 +96,7 @@ No license? A **14-day free trial** starts automatically on first run.
 
 ## What You Can Do
 
-### 97 WHMCS Tools
+### 98 WHMCS Tools
 
 | Category | Tools |
 |---|---|
@@ -110,7 +110,7 @@ No license? A **14-day free trial** starts automatically on first run.
 | **Credits** | `get_credits` `add_credit` `apply_credit` |
 | **Billing** | `add_billable_item` `get_payment_methods` `get_currencies` |
 | **Email** | `send_email` `get_email_templates` |
-| **Products** | `get_products` `get_product_groups` |
+| **Products** | `get_products` `get_product_groups` `create_product` |
 | **Domains** | `register_domain` `transfer_domain` `renew_domain` `get_domain_whois` `get_domain_nameservers` `update_domain_nameservers` `get_domain_lock_status` `update_domain_lock_status` `update_domain_donotrenew` `get_tld_pricing` |
 | **Admin** | `get_admin_users` `get_staff_online` `get_whmcs_details` `log_activity` `get_activity_log` |
 | **Affiliates** | `get_affiliates` `activate_affiliate` |
