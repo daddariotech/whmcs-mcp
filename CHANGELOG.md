@@ -5,6 +5,50 @@ All notable changes to the WHMCS MCP Server project will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.7] - 2026-09-08
+
+### Changed
+
+- **`add_order` — MCP elicitation for missing order details.** `productIds`, `billingCycles`,
+  and `paymentMethod` are now optional in the tool schema. When any of these critical fields
+  are absent, the server issues an MCP elicitation form prompting the user for `pid`
+  (product ID), `billingcycle`, `paymentmethod`, and an optional `domain`. If the connected
+  client does not support elicitation the tool falls back to its previous error message.
+  All existing calls that supply the full set of required fields are unaffected.
+
+- **`create_invoice` — MCP elicitation for missing line items + new `paymentMethod` field.**
+  When neither `items[]` nor `itemDescription` is provided the server issues an MCP
+  elicitation form prompting for `description`, `amount`, `taxed`, `date`, `dueDate`, and
+  `paymentMethod`. The elicited `paymentMethod` (or the directly-supplied one) is forwarded
+  to WHMCS as `paymentmethod`. If the client does not support elicitation the tool falls
+  back to the previous error message. All existing calls that supply line items are unaffected.
+
+## [2.3.6] - 2026-09-07
+
+### Added
+
+- **`create_product` tool.** Creates a new product/package in the WHMCS product catalog
+  via the `AddProduct` Admin API action. Accepts `name` and `gid` (required), plus optional
+  `type` (`hostingaccount`, `reselleraccount`, `server`, `other`), `paytype` (`free`,
+  `onetime`, `recurring`), `description`, `hidden`, `showdomainoptions`, `welcomeemail`,
+  `stockcontrol`, `qty`, `module`, and a `pricing` array of
+  `{ currencyId, billingCycle, price }` entries — each becoming a
+  `pricing[currencyId][billingCycle]` form field as WHMCS requires. Supports
+  `dryRun=true` to preview the call without creating anything.
+  Bookkeeper can use this tool to land the **Managed WP Care** SKU in WHMCS once
+  Stefano confirms the price: call `get_product_groups` first to identify the right
+  group ID, then call `create_product` with the confirmed pricing.
+
+## [2.3.5] - 2026-09-06
+
+### Added
+
+- **`update_domain_donotrenew` tool.** Sets or clears the do-not-renew flag on a WHMCS
+  domain record via `UpdateClientDomain`. Accepts `domainid` (int) or `domain` (string);
+  when only the domain name is supplied, the ID is resolved automatically via
+  `GetClientsDomains`. Supports `dryRun=true` to preview without applying. Use
+  `donotrenew=true` to stop auto-renewal, `donotrenew=false` to re-enable it.
+
 ## [2.3.4] - 2026-08-29
 
 ### Added

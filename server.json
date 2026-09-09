@@ -3,7 +3,7 @@
   "name": "io.github.daddariotech/whmcs-mcp",
   "title": "WHMCS MCP Server",
   "description": "Connect Claude, ChatGPT, and Cursor to live WHMCS over MCP.",
-  "version": "2.3.6",
+  "version": "2.3.7",
   "websiteUrl": "https://daddar.io/whmcs-mcp",
   "repository": {
     "url": "https://github.com/daddariotech/whmcs-mcp",
