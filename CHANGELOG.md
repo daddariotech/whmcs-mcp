@@ -5,6 +5,23 @@ All notable changes to the WHMCS MCP Server project will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.8] - 2026-10-25
+
+### Security
+
+- **Replace every running copy.** WHMCS MCP 2.3.7 and earlier run on Node.js 20. Node.js 20 is end of life and will not receive the fix for CVE-2026-111497, a critical flaw in the Brotli decoder bundled with Node.js. A server that decompresses Brotli data it did not create can crash or run attacker-controlled code. Version 2.3.8 is built on Node.js 22.23.4, which includes the fix. There is no configuration workaround on 2.3.7.
+
+### Upgrade
+
+Pull the new image and recreate the container:
+
+```
+docker pull daddariotech/whmcs-mcp:2.3.8
+docker compose up -d
+```
+
+`latest` tracks this release. If you pinned an older image tag, or you run a Linux binary built before 2.3.8, replace that file too. Those binaries embed Node.js 20 and stay vulnerable until they are replaced. Do this on every machine where the product runs, including copies that are not open to the public internet.
+
 ## [2.3.7] - 2026-09-08
 
 ### Changed
