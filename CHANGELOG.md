@@ -5,6 +5,20 @@ All notable changes to the WHMCS MCP Server project will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.0] - 2026-11-12
+
+### Added
+
+- **`add_cancel_request` tool.** Files a cancellation request for a client service through the
+  stock WHMCS `AddCancelRequest` action, the same as the client area "Request Cancellation". It
+  takes `serviceId`, `type` (`Immediate` or `End of Billing Period`), an optional `reason`, and
+  `dryRun`. The service stays active when the request is filed. What happens next follows your
+  WHMCS Automation Settings, so read the README section "Cancellation requests" before you use it.
+  Requested by HostingB2B.
+
+  Grant `AddCancelRequest` to the MCP API role. Without it, WHMCS answers
+  `Invalid API Action: "addcancelrequest" is not a valid API action`.
+
 ## [2.4.0] - 2026-11-07
 
 ### Added

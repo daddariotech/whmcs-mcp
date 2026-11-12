@@ -98,14 +98,14 @@ No license? A **14-day free trial** starts automatically on first run.
 
 ## What You Can Do
 
-### 99 WHMCS Tools
+### 100 WHMCS Tools
 
 | Category | Tools |
 |---|---|
 | **Clients** | `get_client` `list_clients` `add_client` `update_client` `get_client_details` `get_client_groups` `get_client_emails` `get_client_domains` `get_client_addons` `add_client_note` `get_clients_online` |
 | **Invoices** | `get_invoice` `list_invoices` `create_invoice` `add_invoice_payment` `get_overdue_invoices` `get_transactions` `update_invoice` |
 | **Orders** | `add_order` `get_orders` `accept_order` `cancel_order` `get_order_statuses` `fraud_order` `pending_order` |
-| **Services** | `list_services` `update_service` `upgrade_product` `module_create` `module_suspend` `module_unsuspend` `module_terminate` `get_cancelled_packages` |
+| **Services** | `list_services` `update_service` `upgrade_product` `module_create` `module_suspend` `module_unsuspend` `module_terminate` `get_cancelled_packages` `add_cancel_request` |
 | **Tickets** | `get_ticket` `list_tickets` `open_ticket` `add_ticket_reply` `update_ticket` `get_support_departments` `add_ticket_note` `get_support_statuses` `get_ticket_counts` `get_ticket_predefined_categories` |
 | **Quotes** | `get_quotes` `create_quote` `send_quote` `accept_quote` `update_quote` `delete_quote` |
 | **Contacts** | `get_contacts` `add_contact` `update_contact` |
@@ -142,6 +142,24 @@ WHMCS has `GetStaffOnline` but no equivalent for clients, so this tool calls a s
    Saving that role again in the role editor may drop the custom permission. Re-run the statement if it does.
 
 Until both steps are done the tool returns an error that explains them. WHMCS reports a missing file and a missing permission with the same message, `Invalid API Action: "getclientsonline" is not a valid API action`, so check both. Every other tool works without this file.
+
+### Cancellation requests (`add_cancel_request`)
+
+Files a cancellation request for a service, the same as a client clicking "Request Cancellation". It needs the `AddCancelRequest` permission on the MCP API role.
+
+| Parameter | Required | Notes |
+|---|---|---|
+| `serviceId` | yes | Service (hosting) ID |
+| `type` | yes | `Immediate` or `End of Billing Period` |
+| `reason` | no | Stored with the request. WHMCS records `None Specified (API Submission)` if omitted |
+| `dryRun` | no | Validates the input and returns what would be filed, without calling WHMCS |
+
+The service stays active when the request is filed. Two WHMCS settings decide what happens next:
+
+- **Automation Settings > Cancellation Requests.** When it is ticked, the daily cron terminates the service when the request is due. `Immediate` requests are due on the next run. `End of Billing Period` requests are due on the next due date. A service with a provisioning module is terminated on the server. When it is not ticked, the request waits for an admin.
+- **General Settings > Invoices > Cancellation Request Handling.** When it is ticked, WHMCS cancels outstanding unpaid invoices as soon as the request is filed.
+
+WHMCS allows one open request per service and answers a second with `Existing Cancellation Request Exists`. An unknown ID returns `Service ID Not Found`. Use `get_cancelled_packages` to list open requests.
 
 ### 24 Real-Time Resources
 
