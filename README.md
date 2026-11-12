@@ -32,6 +32,8 @@ Everything above, plus:
 
 > **Project Management tools:** `list_projects` through `end_task_timer` additionally require the WHMCS **Project Management addon** to be active (Setup → Addon Modules), regardless of API role permissions.
 
+> **Clients online (optional):** `get_clients_online` needs one extra file on the WHMCS install, because WHMCS has no stock API action for it. See [Clients online](#clients-online-get_clients_online) below.
+
 > **Domain write permissions:** `register_domain`, `transfer_domain`, and `renew_domain` require
 > `DomainRegister`, `DomainTransfer`, and `DomainRenew` respectively. Note the `Domain` prefix
 > comes first — `RegisterDomain` / `TransferDomain` / `RenewDomain` are not valid WHMCS permission
@@ -96,11 +98,11 @@ No license? A **14-day free trial** starts automatically on first run.
 
 ## What You Can Do
 
-### 98 WHMCS Tools
+### 99 WHMCS Tools
 
 | Category | Tools |
 |---|---|
-| **Clients** | `get_client` `list_clients` `add_client` `update_client` `get_client_details` `get_client_groups` `get_client_emails` `get_client_domains` `get_client_addons` `add_client_note` |
+| **Clients** | `get_client` `list_clients` `add_client` `update_client` `get_client_details` `get_client_groups` `get_client_emails` `get_client_domains` `get_client_addons` `add_client_note` `get_clients_online` |
 | **Invoices** | `get_invoice` `list_invoices` `create_invoice` `add_invoice_payment` `get_overdue_invoices` `get_transactions` `update_invoice` |
 | **Orders** | `add_order` `get_orders` `accept_order` `cancel_order` `get_order_statuses` `fraud_order` `pending_order` |
 | **Services** | `list_services` `update_service` `upgrade_product` `module_create` `module_suspend` `module_unsuspend` `module_terminate` `get_cancelled_packages` |
@@ -121,6 +123,25 @@ No license? A **14-day free trial** starts automatically on first run.
 | **Projects** | `list_projects` `get_project` `create_project` `update_project` `add_project_task` `update_project_task` `delete_project_task` `add_project_message` `start_task_timer` `end_task_timer` — requires the WHMCS **Project Management addon** to be active |
 
 All tools support `dryRun` mode — preview what would happen before making changes.
+
+### Clients online (`get_clients_online`)
+
+Returns clients who logged into the client area in the last N minutes (default 60): a total count plus client ID, name, company, and last login time. It is the same data as the "Users Online" figure in the admin **Client Activity** widget. IP addresses are not returned.
+
+WHMCS has `GetStaffOnline` but no equivalent for clients, so this tool calls a small custom API action that you install once per WHMCS install. The action runs one `COUNT` and one `SELECT` on `tblclients` and never writes.
+
+1. Copy [`whmcs/includes/api/getclientsonline.php`](whmcs/includes/api/getclientsonline.php) to `<whmcs-root>/includes/api/getclientsonline.php`.
+2. Grant `GetClientsOnline` to the API role the MCP server uses. If the role editor does not list it, run this once against the WHMCS database, replacing the role name with yours:
+
+   ```sql
+   UPDATE tblapi_roles
+   SET permissions = JSON_SET(permissions, '$.getclientsonline', 1)
+   WHERE role = 'WHMCS MCP';
+   ```
+
+   Saving that role again in the role editor may drop the custom permission. Re-run the statement if it does.
+
+Until both steps are done the tool returns an error that explains them. Every other tool works without this file.
 
 ### 24 Real-Time Resources
 

@@ -5,6 +5,26 @@ All notable changes to the WHMCS MCP Server project will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.0] - 2026-11-07
+
+### Added
+
+- **`get_clients_online` tool.** Lists clients who logged into the client area within the last
+  `minutes` (default 60, max 10080), with `totalresults` plus client ID, first and last name,
+  company, and last login time. It matches the "Users Online" figure in the admin Client Activity
+  widget. IP addresses are not returned. Supports `limit` (default 100, max 250) and `offset`.
+  Requested by HostingB2B.
+
+  WHMCS has no stock API action for this, so the tool calls a new read-only custom action,
+  `GetClientsOnline`. Install it once per WHMCS install:
+
+  1. Copy `whmcs/includes/api/getclientsonline.php` to `<whmcs-root>/includes/api/`.
+  2. Grant `GetClientsOnline` to the MCP API role. See the README section "Clients online" for
+     the one-line SQL if the role editor does not list it.
+
+  The action runs one `COUNT` and one `SELECT` on `tblclients` and never writes. No other tool
+  depends on it.
+
 ## [2.3.8] - 2026-10-25
 
 ### Security
