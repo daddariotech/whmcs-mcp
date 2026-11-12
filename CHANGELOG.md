@@ -25,6 +25,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   The action runs one `COUNT` and one `SELECT` on `tblclients` and never writes. No other tool
   depends on it.
 
+### Fixed
+
+- **WHMCS error reasons on HTTP 4xx/5xx.** WHMCS answers an unknown API action or a missing
+  role permission with HTTP 403 and a JSON reason. Every tool used to report only
+  `WHMCS API HTTP 403`. Tools now show the WHMCS message, for example
+  `Invalid API Action: "getclientsonline" is not a valid API action (HTTP 403)`.
+
 ## [2.3.8] - 2026-10-25
 
 ### Security

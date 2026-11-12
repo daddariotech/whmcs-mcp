@@ -141,7 +141,7 @@ WHMCS has `GetStaffOnline` but no equivalent for clients, so this tool calls a s
 
    Saving that role again in the role editor may drop the custom permission. Re-run the statement if it does.
 
-Until both steps are done the tool returns an error that explains them. Every other tool works without this file.
+Until both steps are done the tool returns an error that explains them. WHMCS reports a missing file and a missing permission with the same message, `Invalid API Action: "getclientsonline" is not a valid API action`, so check both. Every other tool works without this file.
 
 ### 24 Real-Time Resources
 
