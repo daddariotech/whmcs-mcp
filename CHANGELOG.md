@@ -5,6 +5,25 @@ All notable changes to the WHMCS MCP Server project will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.1] - 2026-11-12
+
+### Security
+
+- **Rebuild the container.** `daddariotech/whmcs-mcp:latest` and `:2.5.0` run Node.js 22.23.4. Node.js 22.23.5, released 11 November 2026, fixes high-severity HTTP/2 and TLS issues, including CVE-2026-123864, CVE-2026-123865, CVE-2026-123866, CVE-2026-123872, and CVE-2026-123874. Details: https://nodejs.org/en/blog/release/v22.23.5. Version 2.5.1 is built on Node.js 22.23.5.
+
+### Upgrade
+
+Pull the new image and recreate the container:
+
+```
+docker pull daddariotech/whmcs-mcp:2.5.1
+docker compose up -d
+```
+
+`latest` tracks this release. Pull it again if you already moved to 2.5.0 today.
+
+The Linux binaries are not part of this fix. They are packed with `@yao-pkg/pkg` 5.16.1, which has no Node.js 22.23.5 base. Use the Docker image for the patched runtime.
+
 ## [2.5.0] - 2026-11-12
 
 ### Added
