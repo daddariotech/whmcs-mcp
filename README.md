@@ -98,7 +98,7 @@ No license? A **14-day free trial** starts automatically on first run.
 
 ## What You Can Do
 
-### 100 WHMCS Tools
+### 103 WHMCS Tools
 
 | Category | Tools |
 |---|---|
@@ -118,11 +118,33 @@ No license? A **14-day free trial** starts automatically on first run.
 | **Affiliates** | `get_affiliates` `activate_affiliate` |
 | **Promotions** | `get_promotions` |
 | **Servers** | `get_servers` `module_change_password` |
-| **System** | `get_health_status` `get_todo_items` `get_todo_item_statuses` `get_announcements` `get_registrars` `get_stats` |
+| **System** | `get_health_status` `get_todo_items` `get_todo_item_statuses` `get_announcements` `add_announcement` `update_announcement` `delete_announcement` `get_registrars` `get_stats` |
 | **Reports** | `get_stats` `get_activity_log` `get_transactions` |
 | **Projects** | `list_projects` `get_project` `create_project` `update_project` `add_project_task` `update_project_task` `delete_project_task` `add_project_message` `start_task_timer` `end_task_timer` — requires the WHMCS **Project Management addon** to be active |
 
-All tools support `dryRun` mode — preview what would happen before making changes.
+All tools support `dryRun` mode: preview what would happen before making changes.
+
+### Invoice line items (`update_invoice`)
+
+`update_invoice` changes an existing invoice, including its lines. Line ids come from `get_invoice`. This uses the stock `UpdateInvoice` action, so the API role needs that permission and nothing else.
+
+| Parameter | Required | Notes |
+|---|---|---|
+| `invoiceid` | yes | Invoice to change |
+| `items` | no | Edit existing lines. Each entry needs `id`, `description`, `amount`, and `taxed`. Sent as `itemdescription[id]`, `itemamount[id]`, `itemtaxed[id]` |
+| `newItems` | no | Lines to add. Each entry needs `description` and `amount`. `taxed` defaults to false. Sent as `newitemdescription[]`, `newitemamount[]`, `newitemtaxed[]` |
+| `deleteLineIds` | no | Line ids to remove. Sent as `deletelineids[]` |
+| `dryRun` | no | Validates the input and describes the change, without calling WHMCS |
+
+WHMCS requires description, amount, and taxed together for every line you edit. A line cannot be edited and deleted in the same call. At most 50 edits, 50 adds, and 50 deletes per call.
+
+On WHMCS 9, published invoices are immutable by default. Line edits, adds, and deletes are accepted while the invoice is Draft. A published invoice returns an error until Invoice Immutability is turned off under Configuration, System Settings, General Settings, Invoices. WHMCS does not allow an Unpaid invoice to be moved back to Draft.
+
+### Announcements
+
+`get_announcements` lists them. `add_announcement` creates one. `update_announcement` changes one. `delete_announcement` removes one. The body is HTML and is stored as given. `date` is `YYYY-MM-DD HH:MM:SS`. `published` true shows it in the client area.
+
+Grant `AddAnnouncement`, `UpdateAnnouncement`, and `DeleteAnnouncement` on the API role. `dryRun` describes the change and does not call WHMCS.
 
 ### Clients online (`get_clients_online`)
 

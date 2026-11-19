@@ -5,6 +5,25 @@ All notable changes to the WHMCS MCP Server project will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.6.0] - 2026-11-19
+
+### Added
+
+- **Invoice line items on `update_invoice`.** The tool can now edit, add, and remove lines on an existing invoice, using the stock WHMCS `UpdateInvoice` fields. `items[]` edits a line (`itemdescription[id]`, `itemamount[id]`, `itemtaxed[id]`; description, amount, and taxed are all required). `newItems[]` adds lines (`newitemdescription[]`, `newitemamount[]`, `newitemtaxed[]`). `deleteLineIds[]` removes lines (`deletelineids[]`). Line ids come from `get_invoice`. `dryRun` still validates and does not save. No new API permission is required if the role already has `UpdateInvoice`. On WHMCS 9, published invoices are immutable by default, so line changes are accepted while the invoice is Draft. A published invoice returns an error until Invoice Immutability is turned off. Requested by HostingB2B.
+
+- **Announcement write tools.** `add_announcement`, `update_announcement`, and `delete_announcement` map to the stock WHMCS actions. `add_announcement` takes `date` (`YYYY-MM-DD HH:MM:SS`), `title`, `announcement` (HTML, stored as given), and `published`. Update changes any of those fields on an existing id. Delete removes one. Each supports `dryRun`. Grant `AddAnnouncement`, `UpdateAnnouncement`, and `DeleteAnnouncement` on the API role. Requested by HostingB2B.
+
+### Upgrade
+
+Pull the new image and recreate the container:
+
+```
+docker pull daddariotech/whmcs-mcp:2.6.0
+docker compose up -d
+```
+
+`latest` tracks this release.
+
 ## [2.5.1] - 2026-11-12
 
 ### Security
